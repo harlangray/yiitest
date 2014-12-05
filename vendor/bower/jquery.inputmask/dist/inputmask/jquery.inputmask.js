@@ -3,7 +3,7 @@
 * http://github.com/RobinHerbots/jquery.inputmask
 * Copyright (c) 2010 - 2014 Robin Herbots
 * Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php)
-* Version: 3.1.41
+* Version: 3.1.42
 */
 !function(factory) {
     "function" == typeof define && define.amd ? define([ "jquery" ], factory) : factory(jQuery);
@@ -181,17 +181,21 @@
             return mask;
         }
         var ms = void 0;
-        if ($.isFunction(opts.mask) && (opts.mask = opts.mask.call(this, opts)), $.isArray(opts.mask)) if (multi) ms = [], 
-        $.each(opts.mask, function(ndx, msk) {
-            ms.push(void 0 == msk.mask || $.isFunction(msk.mask) ? generateMask(preProcessMask(msk), msk) : generateMask(preProcessMask(msk.mask), msk));
-        }); else {
-            opts.keepStatic = void 0 == opts.keepStatic ? !0 : opts.keepStatic;
-            var altMask = "(";
-            $.each(opts.mask, function(ndx, msk) {
-                altMask.length > 1 && (altMask += ")|("), altMask += preProcessMask(void 0 == msk.mask || $.isFunction(msk.mask) ? msk : msk.mask);
-            }), altMask += ")", ms = generateMask(altMask, opts.mask);
-        } else opts.mask && (ms = void 0 == opts.mask.mask || $.isFunction(opts.mask.mask) ? generateMask(preProcessMask(opts.mask), opts.mask) : generateMask(preProcessMask(opts.mask.mask), opts.mask));
-        return ms;
+        if ($.isFunction(opts.mask) && (opts.mask = opts.mask.call(this, opts)), $.isArray(opts.mask)) {
+            if (multi) return ms = [], $.each(opts.mask, function(ndx, msk) {
+                ms.push(void 0 == msk.mask || $.isFunction(msk.mask) ? generateMask(preProcessMask(msk), msk) : generateMask(preProcessMask(msk.mask), msk));
+            }), ms;
+            if (opts.mask.length > 1) {
+                opts.keepStatic = void 0 == opts.keepStatic ? !0 : opts.keepStatic;
+                var altMask = "(";
+                return $.each(opts.mask, function(ndx, msk) {
+                    altMask.length > 1 && (altMask += ")|("), altMask += preProcessMask(void 0 == msk.mask || $.isFunction(msk.mask) ? msk : msk.mask);
+                }), altMask += ")", generateMask(altMask, opts.mask);
+            }
+            opts.mask = opts.mask.pop();
+        }
+        return opts.mask && (ms = void 0 == opts.mask.mask || $.isFunction(opts.mask.mask) ? generateMask(preProcessMask(opts.mask), opts.mask) : generateMask(preProcessMask(opts.mask.mask), opts.mask)), 
+        ms;
     }
     function maskScope(actionObj, maskset, opts) {
         function getMaskTemplate(baseOnInput, minimalPos, includeInput) {
@@ -551,9 +555,7 @@
                 } else keypressEvent.call(input, keypress, !0, !1, !0, lvp + 1);
             }), writeOut) {
                 var keypressResult = opts.onKeyPress.call(this, void 0, getBuffer(), 0, opts);
-                handleOnKeyResult(input, keypressResult);
-                var forwardPosition = getMaskSet().p;
-                writeBuffer(input, getBuffer(), $(input).is(":focus") ? opts.numericInput ? seekPrevious(forwardPosition) : forwardPosition : void 0);
+                handleOnKeyResult(input, keypressResult), writeBuffer(input, getBuffer(), $(input).is(":focus") ? seekNext(getLastValidPosition(0)) : void 0);
             }
         }
         function escapeRegex(str) {
@@ -636,7 +638,7 @@
             return isRTL ? begin - end > 1 || begin - end == 1 && opts.insertMode : end - begin > 1 || end - begin == 1 && opts.insertMode;
         }
         function installEventRuler(npt) {
-            var events = $._data(npt).events;
+            var events = $._data(npt).events, incomposition = !1;
             $.each(events, function(eventType, eventHandlers) {
                 $.each(eventHandlers, function(ndx, eventHandler) {
                     if ("inputmask" == eventHandler.namespace && "setvalue" != eventHandler.type) {
@@ -645,7 +647,7 @@
                             if (!this.readOnly && !this.disabled) {
                                 switch (e.type) {
                                   case "input":
-                                    if (skipInputEvent === !0) return skipInputEvent = !1, e.preventDefault;
+                                    if (skipInputEvent === !0 || incomposition) return skipInputEvent = !1, e.preventDefault();
                                     break;
 
                                   case "keydown":
@@ -653,16 +655,23 @@
                                     break;
 
                                   case "keypress":
-                                    if (skipKeyPressEvent === !0) return e.preventDefault;
+                                    if (skipKeyPressEvent === !0) return e.preventDefault();
                                     skipKeyPressEvent = !0;
                                     break;
 
+                                  case "compositionstart":
+                                    incomposition = !0;
+                                    break;
+
                                   case "compositionupdate":
-                                    skipInputEvent = !0;
+                                    break;
+
+                                  case "compositionend":
+                                    incomposition = !1, skipInputEvent = !0;
                                 }
                                 return handler.apply(this, arguments);
                             }
-                            e.preventDefault;
+                            e.preventDefault();
                         };
                     }
                 });
@@ -850,16 +859,28 @@
             checkVal(input, !0, !1), isComplete(getBuffer()) === !0 && $(input).trigger("complete"), 
             e.preventDefault();
         }
-        function compositionupdateEvent(e) {
+        function compositionStartEvent(e) {
             var input = this;
-            return setTimeout(function() {
-                caret(input, caret(input).begin - 1);
+            undoValue = getBuffer().join(""), 0 != e.originalEvent.data.indexOf(compositionData) && (compositionValidPos = $.extend(!0, {}, getMaskSet().validPositions), 
+            compositionCaretPos = caret(input));
+        }
+        function compositionUpdateEvent(e) {
+            var input = this, caretPos = compositionCaretPos || caret(input);
+            getMaskSet().validPositions = $.extend(!0, {}, compositionValidPos);
+            var newData = e.originalEvent.data;
+            caret(input, caretPos.begin, caretPos.end);
+            for (var i = 0; i < newData.length; i++) {
                 var keypress = $.Event("keypress");
-                keypress.which = e.originalEvent.data.charCodeAt(0), skipKeyPressEvent = !1, ignorable = !1, 
-                keypressEvent.call(input, keypress, void 0, void 0, !1);
+                keypress.which = newData.charCodeAt(i), skipKeyPressEvent = !1, ignorable = !1, 
+                keypressEvent.call(input, keypress);
+            }
+            setTimeout(function() {
                 var forwardPosition = getMaskSet().p;
                 writeBuffer(input, getBuffer(), opts.numericInput ? seekPrevious(forwardPosition) : forwardPosition);
-            }, 0), !1;
+            }, 10);
+        }
+        function compositionEndEvent(e) {
+            compositionData = e.originalEvent.data;
         }
         function mask(el) {
             if ($el = $(el), $el.is(":input") && isInputTypeSupported($el.attr("type"))) {
@@ -938,9 +959,7 @@
                     }), input._valueGet() == getBufferTemplate().join("") && $input.trigger("cleared"), 
                     opts.showTooltip && $input.prop("title", getMaskSet().mask);
                 }).bind("complete.inputmask", opts.oncomplete).bind("incomplete.inputmask", opts.onincomplete).bind("cleared.inputmask", opts.oncleared), 
-                $el.bind("keydown.inputmask", keydownEvent).bind("keypress.inputmask", keypressEvent).bind("keyup.inputmask", keyupEvent).bind("compositionstart.inputmask", function() {
-                    undoValue = getBuffer().join(""), compositionUpdateData = "";
-                }).bind("compositionupdate.inputmask", compositionupdateEvent).bind("compositionend.inputmask", function() {}), 
+                $el.bind("keydown.inputmask", keydownEvent).bind("keypress.inputmask", keypressEvent).bind("keyup.inputmask", keyupEvent).bind("compositionstart.inputmask", compositionStartEvent).bind("compositionupdate.inputmask", compositionUpdateEvent).bind("compositionend.inputmask", compositionEndEvent), 
                 "paste" === PasteEventType && $el.bind("input.inputmask", inputFallBackEvent), patchValueProperty(el);
                 var initialValue = $.isFunction(opts.onBeforeMask) ? opts.onBeforeMask.call(el, el._valueGet(), opts) || el._valueGet() : el._valueGet();
                 checkVal(el, !0, !1, initialValue.split(""));
@@ -955,7 +974,7 @@
                 installEventRuler(el);
             }
         }
-        var undoValue, compositionUpdateData, $el, maxLength, isRTL = !1, skipKeyPressEvent = !1, skipInputEvent = !1, ignorable = !1, firstClick = !0;
+        var undoValue, compositionValidPos, compositionCaretPos, compositionData, $el, maxLength, isRTL = !1, skipKeyPressEvent = !1, skipInputEvent = !1, ignorable = !1, firstClick = !0;
         if (void 0 != actionObj) switch (actionObj.action) {
           case "isComplete":
             return $el = $(actionObj.el), maskset = $el.data("_inputmask").maskset, opts = $el.data("_inputmask").opts, 
