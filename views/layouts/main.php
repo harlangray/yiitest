@@ -45,7 +45,22 @@ AppAsset::register($this);
                         ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']],
-                ],
+                
+                    ['label' => 'User',
+                        'items' => [
+                            ['label' => 'Register', 'url' => ['/user/registration/register']],
+                            ['label' => 'Login', 'url' => ['/user/security/login']],
+                            ['label' => 'Request', 'url' => ['/user/recovery/request']],
+                            ['label' => 'Reset', 'url' => ['/user/recovery/reset']],
+                            ['label' => 'Profile', 'url' => ['/user/settings/profile']],
+                            ['label' => 'email', 'url' => ['/user/settings/email']],
+                            ['label' => 'Password', 'url' => ['/user/settings/password']],
+                            ['label' => 'Profile Show', 'url' => ['/user/profile/show']],
+                            ['label' => 'Manage Users', 'url' => ['/user/admin/index']],
+                            
+                        ],
+                        ]
+                    ],
             ]);
             NavBar::end();
         ?>

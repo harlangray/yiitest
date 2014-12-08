@@ -41,25 +41,69 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
         ],
-        'sourceLanguage'=>'en-US',
-
-        
+        'i18n' => array(
+            'translations' => array(
+                'user' => array(
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => "@app/messages",
+                    'sourceLanguage' => 'en_US',
+                    'fileMap' => array(
+                        'app' => 'app.php'
+                    )
+                ),
+                'yii' => array(
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => "@app/messages",
+                    'sourceLanguage' => 'en_US',
+                    'fileMap' => array(
+                        'yii' => 'yii.php'
+                    )
+                )
+            )
+        ),
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+        ],
+        'authManager' => [
+            //'class' => 'yii\rbac\PhpManager', // or use 'yii\rbac\DbManager'
+            'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['guest'],
+        ],
+        'as access' => [
+            'class' => 'mdm\admin\components\AccessControl',
+            'allowActions' => [
+                'admin/*', // add or remove allowed actions to this list
+            ]
+        ],
         'db' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
     'modules' => [
         'gii' => [
             'class' => 'yii\gii\Module',
-            'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // adjust this to your needs
+            'allowedIPs' => ['127.0.0.1', '::1'], // adjust this to your needs
+     
+            'generators' => [
+                'crud'   => [
+                    'class'     => 'yii\gii\generators\crud\Generator',
+                    'templates' => ['harlan' => '@app/vender/yiisoft/yii2-gii/generators/crud/default_harlan']
+                ]
+            ]
+                       
         ],
-        
- 'user' => [
+        'user' => [
             'class' => 'dektrium\user\Module',
-            'enableUnconfirmedLogin' => true,
+            'enableUnconfirmedLogin' => false,
+            'enableRegistration' => true,
             'confirmWithin' => 21600,
             'cost' => 12,
-            'admins' => ['admin']
-        ],        
+            'admins' => ['admin'],
+            
+        ],
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+            'layout' => 'left-menu',
+        ]
     ]
 ];
 
@@ -69,7 +113,17 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = 'yii\debug\Module';
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = 'yii\gii\Module';
+    $config['modules']['gii'] = [
+        'class' => 'yii\gii\Module',
+        'allowedIPs' => ['127.0.0.1', '::1',],
+           'generators' => [
+                'crud'   => [
+                    'class'     => 'yii\gii\generators\crud\Generator',
+                    'templates' => ['harlan' => '@app/templates/crud_harlan']
+                ]
+            ]
+        
+    ];
 }
 
 return $config;
