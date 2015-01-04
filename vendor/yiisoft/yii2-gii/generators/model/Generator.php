@@ -427,7 +427,7 @@ class Generator extends \yii\gii\Generator
      * @param boolean $multiple whether this is a has-many relation
      * @return string the relation name
      */
-    protected function generateRelationName($relations, $className, $table, $key, $multiple)
+    public function generateRelationName($relations, $className, $table, $key, $multiple)
     {
         if (!empty($key) && substr_compare($key, 'id', -2, 2, true) === 0 && strcasecmp($key, 'id')) {
             $key = rtrim(substr($key, 0, -2), '_');
@@ -572,7 +572,7 @@ class Generator extends \yii\gii\Generator
      * @param string $tableName the table name (which may contain schema prefix)
      * @return string the generated class name
      */
-    protected function generateClassName($tableName)
+    public function generateClassName($tableName)
     {
         if (isset($this->classNames[$tableName])) {
             return $this->classNames[$tableName];
@@ -627,5 +627,17 @@ class Generator extends \yii\gii\Generator
         }
 
         return false;
+    }
+    
+    public function findMatchingField($fieldPart){
+        $db = $this->getDbConnection();
+        $tableSchema = $db->getTableSchema($this->tableName);
+        
+        foreach ($tableSchema->columns as $columnName => $column) {
+            if (strpos($columnName, $fieldPart) !== false)  {
+                return $columnName;
+            }
+        }
+        return '';
     }
 }

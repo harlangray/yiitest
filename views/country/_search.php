@@ -17,13 +17,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'cn_id') ?>
 
+    <?= $form->field($model, 'cn_description') ?>
+
     <?= $form->field($model, 'cn_continent_id') ?>
 
-    <?= $form->field($model, 'cn_name') ?>
+    <?= $form->field($model, 'cn_is_deleted') ?>
+
+    <?= $form->field($model, 'cn_deleted_at') ?>
+
+    <?php // echo $form->field($model, 'cn_deleted_by') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

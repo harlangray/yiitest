@@ -6,8 +6,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Continent */
 
-$this->title = 'Create Continent';
-$this->params['breadcrumbs'][] = ['label' => 'Continents', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create {modelClass}', [
+    'modelClass' => 'Continent',
+]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Continents'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="continent-create">

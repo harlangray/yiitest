@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\CountrySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Countries';
+$this->title = Yii::t('app', 'Countries');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="country-index">
@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Country', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create {modelClass}', [
+    'modelClass' => 'Country',
+]), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -26,12 +28,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'cn_id',
-            'cn_continent_id',
+            'cn_description',
             [
                 'attribute' => 'cn_continent_id',
-                'value' => 'cnContinent.co_name'
+                'value'=>'cnContinent.co_name',
             ],
-            'cn_name',
+            'cn_is_deleted',
+            'cn_deleted_at',
+//            'cn_deleted_by',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

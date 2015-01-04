@@ -43,19 +43,52 @@ $this->params['breadcrumbs'][] = $this->title;
 $count = 0;
 if (($tableSchema = $generator->getTableSchema()) === false) {
     foreach ($generator->getColumnNames() as $name) {
+        $relatedFieldDtls = $generator->getRelatedFieldDtls($name);
+        $field = '';  
+        if($relatedFieldDtls !== null){
+            $relationName = $relatedFieldDtls['relationName'];
+            $foreignFieldName = $relatedFieldDtls['foreignFieldName'];
+            $relationName = lcfirst($relationName);
+            
+            $field .= "            [\n";
+            $field .= "                'attribute' => '$column->name',\n";
+            $field .= "                'value'=>'$relationName.$foreignFieldName',\n";
+            $field .= "            ],\n";            
+        }
+        else{
+            $field = "            '" . $name . "',\n";
+        }
         if (++$count < 6) {
-            echo "            '" . $name . "',\n";
+            echo $field;
         } else {
-            echo "            // '" . $name . "',\n";
+            echo "//$field";
         }
     }
 } else {
     foreach ($tableSchema->columns as $column) {
         $format = $generator->generateColumnFormat($column);
+        
+        $relatedFieldDtls = $generator->getRelatedFieldDtls($column->name);
+        $field = '';  
+        if($relatedFieldDtls !== null){
+            $relationName = $relatedFieldDtls['relationName'];
+            $foreignFieldName = $relatedFieldDtls['foreignFieldName'];
+            $relationName = lcfirst($relationName);
+            
+            $field .= "            [\n";
+            $field .= "                'attribute' => '$column->name',\n";
+            $field .= "                'value'=>'$relationName.$foreignFieldName',\n";
+            $field .= "            ],\n";            
+        }
+        else{
+            $field = "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        }
+
+        
         if (++$count < 6) {
-            echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            echo $field;
         } else {
-            echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            echo "//$field";
         }
     }
 }

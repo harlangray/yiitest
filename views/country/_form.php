@@ -1,30 +1,36 @@
 <?php
-
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper; 
+use kartik\widgets\ActiveForm;
+use kartik\builder\FormGrid;
+use kartik\builder\Form;
+
+use yii\helpers\ArrayHelper;
 use app\models\Continent;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Country */
-/* @var $form yii\widgets\ActiveForm */
-?>
-
-<div class="country-form">
-
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?php $form->field($model, 'cn_continent_id')->textInput(); ?>
-
-            <?= $form->field($model, 'cn_continent_id')->dropDownList(ArrayHelper::map(Continent::find()->asArray()->all(), 'co_id', 'co_name')) ?>
+$form = ActiveForm::begin();
+echo FormGrid::widget([
+    'model' => $model,
+    'form' => $form,
+    'autoGenerateColumns' => true,
+    'rows' => [
     
-    <?= $form->field($model, 'cn_name')->textInput(['maxlength' => 20]) ?>
     
+[
+'attributes' => [
+        'cn_description' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                        'cn_continent_id' => ['type'=>Form::INPUT_DROPDOWN_LIST, 'items' => ArrayHelper::map(Continent::find()->orderBy('co_name')->asArray()->all(), 'co_id', 'co_name'),'options'=>['placeholder'=>'']],
+
+                ],
+],
+   
+    
+    ]
+]);
+?>    <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
-
-</div>
+<?php
+ActiveForm::end();
+?>

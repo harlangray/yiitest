@@ -15,8 +15,9 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'dektrium\user\models\User',
+            'loginUrl' => ['/user/login'],
+//            'enableAutoLogin' => true,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -61,36 +62,45 @@ $config = [
                 )
             )
         ),
+        
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'dateFormat' => 'yyyy-M-dd',
+            'datetimeFormat' => 'yyyy-M-dd H:i:s',
+            'timeFormat' => 'H:i:s',],
+        
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
         ],
+        
         'authManager' => [
             //'class' => 'yii\rbac\PhpManager', // or use 'yii\rbac\DbManager'
             'class' => 'yii\rbac\DbManager',
-            'defaultRoles' => ['guest'],
+//            'defaultRoles' => ['guest'],
         ],
-        'as access' => [
-            'class' => 'mdm\admin\components\AccessControl',
-            'allowActions' => [
-                'admin/*', // add or remove allowed actions to this list
-            ]
-        ],
+
+
         'db' => require(__DIR__ . '/db.php'),
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'user/security/logout', 
+            'user/security/login',
+//            'site/login'
+            // add or remove allowed actions to this list
+        ]
     ],
     'params' => $params,
     'modules' => [
-        'gii' => [
-            'class' => 'yii\gii\Module',
-            'allowedIPs' => ['127.0.0.1', '::1'], // adjust this to your needs
-     
-            'generators' => [
-                'crud'   => [
-                    'class'     => 'yii\gii\generators\crud\Generator',
-                    'templates' => ['harlan' => '@app/vender/yiisoft/yii2-gii/generators/crud/default_harlan']
-                ]
-            ]
-                       
-        ],
+
+//                    'controllerMap' => [
+//                 'assignment' => [
+//                    'class' => 'mdm\admin\controllers\AssignmentController',
+//                    'userClassName' => 'dektrium\user\models\User',
+//                    'idField' => 'id'
+//                ]
+//            ],
         'user' => [
             'class' => 'dektrium\user\Module',
             'enableUnconfirmedLogin' => false,
@@ -103,7 +113,11 @@ $config = [
         'admin' => [
             'class' => 'mdm\admin\Module',
             'layout' => 'left-menu',
-        ]
+ 
+        ],
+        'gridview' =>  [
+             'class' => '\kartik\grid\Module'
+         ]        
     ]
 ];
 
@@ -113,17 +127,30 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = 'yii\debug\Module';
 
     $config['bootstrap'][] = 'gii';
+//    $config['modules']['gii_harlan'] = [
+//        'class' => 'yii\gii_harlan\Module',
+//        'allowedIPs' => ['127.0.0.1', '::1',],
+//           'generators' => [
+//                'crud'   => [
+////                    'class'     => 'yii\gii_harlan\generators\crud\Generator',
+////                    'templates' => ['harlan' => '@app/templates/crud_harlan']
+//                ]
+//            ]
+//        
+//    ];
+    
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         'allowedIPs' => ['127.0.0.1', '::1',],
-           'generators' => [
-                'crud'   => [
-                    'class'     => 'yii\gii\generators\crud\Generator',
-                    'templates' => ['harlan' => '@app/templates/crud_harlan']
-                ]
-            ]
+//           'generators' => [
+////                'crud'   => [
+////                    'class'     => 'yii\gii_harlan\generators\crud\Generator',
+////                    'templates' => ['harlan' => '@app/templates/crud_harlan']
+//                ]
+//            ]
         
     ];
+    
 }
 
 return $config;

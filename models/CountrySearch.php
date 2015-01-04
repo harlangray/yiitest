@@ -18,8 +18,8 @@ class CountrySearch extends Country
     public function rules()
     {
         return [
-            [['cn_id', 'cn_continent_id'], 'integer'],
-            [['cn_name'], 'safe'],
+            [['cn_id', 'cn_continent_id', 'cn_is_deleted', 'cn_deleted_by'], 'integer'],
+            [['cn_description', 'cn_deleted_at'], 'safe'],
         ];
     }
 
@@ -54,9 +54,12 @@ class CountrySearch extends Country
         $query->andFilterWhere([
             'cn_id' => $this->cn_id,
             'cn_continent_id' => $this->cn_continent_id,
+            'cn_is_deleted' => $this->cn_is_deleted,
+            'cn_deleted_at' => $this->cn_deleted_at,
+            'cn_deleted_by' => $this->cn_deleted_by,
         ]);
 
-        $query->andFilterWhere(['like', 'cn_name', $this->cn_name]);
+        $query->andFilterWhere(['like', 'cn_description', $this->cn_description]);
 
         return $dataProvider;
     }

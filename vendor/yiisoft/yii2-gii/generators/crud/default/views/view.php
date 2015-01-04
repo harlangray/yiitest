@@ -41,13 +41,28 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
 <?php
 if (($tableSchema = $generator->getTableSchema()) === false) {
-    foreach ($generator->getColumnNames() as $name) {
-        echo "            '" . $name . "',\n";
+    foreach ($generator->getColumnNames() as $name) {      
+            echo "            '" . $name . "',\n";
     }
 } else {
     foreach ($generator->getTableSchema()->columns as $column) {
         $format = $generator->generateColumnFormat($column);
-        echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        
+        $relatedFieldDtls = $generator->getRelatedFieldDtls($column->name);
+        $field = '';  
+        if($relatedFieldDtls !== null){
+            $relationName = $relatedFieldDtls['relationName'];
+            $foreignFieldName = $relatedFieldDtls['foreignFieldName'];
+            $relationName = lcfirst($relationName);
+            
+            echo "            [\n";
+            echo "                'attribute' => '$column->name',\n";
+            echo "                'value'=>\$model->$relationName->$foreignFieldName,\n";
+            echo "            ],\n";
+        } 
+        else{
+            echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        }
     }
 }
 ?>

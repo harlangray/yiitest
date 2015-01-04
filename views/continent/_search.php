@@ -19,9 +19,27 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'co_name') ?>
 
+    <?= $form->field($model, 'co_date_field') ?>
+
+    <?= $form->field($model, 'co_datetime_field') ?>
+
+    <?= $form->field($model, 'co_created_on') ?>
+
+    <?php // echo $form->field($model, 'co_created_at') ?>
+
+    <?php // echo $form->field($model, 'co_created_by') ?>
+
+    <?php // echo $form->field($model, 'co_is_deleted') ?>
+
+    <?php // echo $form->field($model, 'co_updated_by') ?>
+
+    <?php // echo $form->field($model, 'co_updated_at') ?>
+
+    <?php // echo $form->field($model, 'co_deleted_at') ?>
+
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

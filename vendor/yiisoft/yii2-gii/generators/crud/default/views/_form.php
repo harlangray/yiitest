@@ -3,6 +3,7 @@
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
+
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\crud\Generator */
 
@@ -11,32 +12,73 @@ $model = new $generator->modelClass();
 $safeAttributes = $model->safeAttributes();
 if (empty($safeAttributes)) {
     $safeAttributes = $model->attributes();
-}
-
-echo "<?php\n";
+} 
 ?>
-
+<?= "<?php\n";?>
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use kartik\widgets\ActiveForm;
+use kartik\builder\FormGrid;
+use kartik\builder\Form;
 
-/* @var $this yii\web\View */
-/* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
-/* @var $form yii\widgets\ActiveForm */
+<?php
+if($generator->hasForeignTable()){
+    echo "use yii\helpers\ArrayHelper;\n";
+    
+    $tableSchema = $generator->getTableSchema();
+    foreach ($tableSchema->foreignKeys as $foreignKeys) {       
+        $tableName = $foreignKeys['0'];
+        $modGen = new yii\gii\generators\model\Generator;
+        $className = $modGen->generateClassName($tableName);
+        echo "use app\models\\{$className};\n";          
+    }
+}
 ?>
 
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
+$form = ActiveForm::begin();
+echo FormGrid::widget([
+    'model' => $model,
+    'form' => $form,
+    'autoGenerateColumns' => true,
+    'rows' => [
+    
+    
+<?php 
+$attributes = $generator->getColumnNames();
 
-    <?= "<?php " ?>$form = ActiveForm::begin(); ?>
-
-<?php foreach ($generator->getColumnNames() as $attribute) {
-    if (in_array($attribute, $safeAttributes)) {
-        echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+foreach ($attributes as $key => $attribute){
+    if($generator->dontGenerateField($attribute) || !in_array($attribute, $safeAttributes)){
+        unset($attributes[$key]);
     }
-} ?>
+}
+$size = 3;
+$attributChunks = array_chunk($attributes, $size);
+
+foreach ($attributChunks as $attributes) {
+    echo "[\n";
+    echo "'attributes' => [\n";
+    foreach ($attributes as $attribute){
+ 
+            
+                ?>
+        '<?= $attribute;?>' => <?= $generator->generateKartikField($attribute)?>,
+
+                <?php
+            
+ 
+    }
+    echo "],\n";
+    echo "],\n";
+}
+?>
+   
+    
+    ]
+]);
+<?= '?>'?>
     <div class="form-group">
         <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
-    <?= "<?php " ?>ActiveForm::end(); ?>
-
-</div>
+<?= "<?php\n";?>
+ActiveForm::end();
+<?= '?>'?>

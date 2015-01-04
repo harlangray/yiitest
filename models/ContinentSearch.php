@@ -18,8 +18,8 @@ class ContinentSearch extends Continent
     public function rules()
     {
         return [
-            [['co_id'], 'integer'],
-            [['co_name'], 'safe'],
+            [['co_id', 'co_created_by', 'co_is_deleted', 'co_updated_by'], 'integer'],
+            [['co_name', 'co_date_field', 'co_datetime_field', 'co_created_on', 'co_created_at', 'co_updated_at', 'co_deleted_at'], 'safe'],
         ];
     }
 
@@ -53,6 +53,15 @@ class ContinentSearch extends Continent
 
         $query->andFilterWhere([
             'co_id' => $this->co_id,
+            'co_date_field' => $this->co_date_field,
+            'co_datetime_field' => $this->co_datetime_field,
+            'co_created_on' => $this->co_created_on,
+            'co_created_at' => $this->co_created_at,
+            'co_created_by' => $this->co_created_by,
+            'co_is_deleted' => $this->co_is_deleted,
+            'co_updated_by' => $this->co_updated_by,
+            'co_updated_at' => $this->co_updated_at,
+            'co_deleted_at' => $this->co_deleted_at,
         ]);
 
         $query->andFilterWhere(['like', 'co_name', $this->co_name]);

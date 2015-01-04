@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Country */
 
 $this->title = $model->cn_id;
-$this->params['breadcrumbs'][] = ['label' => 'Countries', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Countries'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="country-view">
@@ -15,11 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->cn_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->cn_id], [
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->cn_id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->cn_id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -29,8 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'cn_id',
-            'cn_continent_id',
-            'cn_name',
+            'cn_description',
+            [
+                'attribute' => 'cn_continent_id',
+                'value'=>$model->cnContinent->co_name,
+            ],
+            'cn_is_deleted',
+            'cn_deleted_at',
+            'cn_deleted_by',
         ],
     ]) ?>
 
