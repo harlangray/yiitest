@@ -861,20 +861,33 @@ class Generator extends \yii\gii\Generator {
 //                    )
                     
                     if($fKey['0'] == $masterTable){
+                        
+//                         echo '<pre>';
+//                         echo $tableName . '</br>';
+//                         echo print_r($tableSchema);
+//                         echo '</pre>';
+                         
                          echo '<pre>';
                          echo $tableName . '</br>';
                          echo print_r($fKey);
                          echo '</pre>';
+                         
                          $relatedTable = [];
+                         $masterDetailForm = false;
                          foreach ($fKey as $index => $value){
                               if($index == '0'){
                                    $relatedTable['tabelName'] = $tableName;
                               }
                               else{
                                    $relatedTable['relatedField'] = $index;
+                                   if($tableSchema->$index['comment'] == '<md>'){
+                                       $masterDetailForm = true;
+                                   }
                               }
                          }
-                         $relatedTables[] = $relatedTable;
+                         if($masterDetailForm){
+                            $relatedTables[] = $relatedTable;
+                         }
                     }
 
                }
