@@ -4,8 +4,6 @@ use kartik\widgets\ActiveForm;
 use kartik\builder\FormGrid;
 use kartik\builder\Form;
 
-use yii\helpers\ArrayHelper;
-use app\models\City;
 
 $form = ActiveForm::begin();
 echo FormGrid::widget([
@@ -17,17 +15,9 @@ echo FormGrid::widget([
     
 [
 'attributes' => [
-        'co_main_city_id' => ['type'=>Form::INPUT_DROPDOWN_LIST, 'items' => ArrayHelper::map(City::find()->orderBy('c_name')->asArray()->all(), 'c_id', 'c_name'),'options'=>['placeholder'=>'']],
+        'c_name' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
 
-                        'co_name' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
-
-                        'co_area' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
-
-                ],
-],
-[
-'attributes' => [
-        'co_description' => ['type'=>Form::INPUT_TEXTAREA, 'options'=>['placeholder'=>'']],
+                        'c_population' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
 
                 ],
 ],
@@ -36,6 +26,11 @@ echo FormGrid::widget([
     ]
 ]);
 
+     echo $this->render('_continent_grid', [
+         'form' => $form,
+         'model' => $model,
+         'continentMods' => $continentMods,
+     ]);
      echo $this->render('_country_grid', [
          'form' => $form,
          'model' => $model,

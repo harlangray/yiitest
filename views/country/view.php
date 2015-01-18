@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Country */
 
-$this->title = $model->cn_id;
+$this->title = $model->cn_name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Countries'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -29,14 +29,19 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'cn_id',
-            'cn_description',
             [
                 'attribute' => 'cn_continent_id',
                 'value'=>$model->cnContinent->co_name,
             ],
+            'cn_name',
+            'cn_area',
             'cn_is_deleted',
             'cn_deleted_at',
             'cn_deleted_by',
+            [
+                'attribute' => 'cn_created_by',
+                'value'=>$model->cnCreatedBy->username,
+            ],
         ],
     ]) ?>
 

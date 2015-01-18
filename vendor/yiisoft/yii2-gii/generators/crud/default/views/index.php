@@ -53,15 +53,15 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             $field .= "            [\n";
             $field .= "                'attribute' => '$column->name',\n";
             $field .= "                'value'=>'$relationName.$foreignFieldName',\n";
-            $field .= "            ],\n";            
+            $field .= "            ],";            
         }
         else{
-            $field = "            '" . $name . "',\n";
+            $field = "            '" . $name . "',";
         }
         if (++$count < 6) {
-            echo $field;
+            echo "{$field}\n";
         } else {
-            echo "//$field";
+            echo "/*{$field}*/\n";
         }
     }
 } else {
@@ -78,17 +78,17 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             $field .= "            [\n";
             $field .= "                'attribute' => '$column->name',\n";
             $field .= "                'value'=>'$relationName.$foreignFieldName',\n";
-            $field .= "            ],\n";            
+            $field .= "            ],";            
         }
         else{
-            $field = "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+            $field = "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',";
         }
 
         
         if (++$count < 6) {
-            echo $field;
+            echo "{$field}\n";
         } else {
-            echo "//$field";
+            echo "/*{$field}*/\n";
         }
     }
 }

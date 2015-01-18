@@ -353,6 +353,7 @@ class Generator extends \yii\gii\Generator
             $link = $this->generateRelationLink([$fks[$table->primaryKey[1]][1] => $table->primaryKey[1]]);
             $viaLink = $this->generateRelationLink([$table->primaryKey[0] => $fks[$table->primaryKey[0]][1]]);
             $relationName = $this->generateRelationName($relations, $className0, $db->getTableSchema($table0), $table->primaryKey[1], true);
+            die($relationName);
             $relations[$className0][$relationName] = [
                 "return \$this->hasMany($className1::className(), $link)->viaTable('" . $this->generateTableName($table->name) . "', $viaLink);",
                 $className1,
@@ -429,6 +430,14 @@ class Generator extends \yii\gii\Generator
      */
     public function generateRelationName($relations, $className, $table, $key, $multiple)
     {
+ 
+//        echo 'class name-' . $className . '<br>';
+//        echo 'key-' . $key . '<br>';
+//        echo 'multiple-' . $multiple . '<br>';
+//        if(isset($table->name)){
+//            echo 'table name-' . $table->name;
+//        }
+        
         if (!empty($key) && substr_compare($key, 'id', -2, 2, true) === 0 && strcasecmp($key, 'id')) {
             $key = rtrim(substr($key, 0, -2), '_');
         }
@@ -442,8 +451,8 @@ class Generator extends \yii\gii\Generator
         }
         while (isset($relations[$className][lcfirst($name)])) {
             $name = $rawName . ($i++);
-        }
-
+        }        
+//       echo 'rel name-' . $name . '<br>';        
         return $name;
     }
 

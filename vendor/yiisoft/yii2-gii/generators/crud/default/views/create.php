@@ -25,6 +25,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= "<?= " ?>$this->render('_form', [
         'model' => $model,
+        <?php
+            $schema = $generator->getTableSchema();
+            $masterTable = $schema->fullName; 
+          
+            $relatedDetailTables = $generator->getRelatedTableAndFields($masterTable);
+            foreach ($relatedDetailTables as $relatedTable){
+                $tableName = $relatedTable['tabelName'];
+                $fieldName = $relatedTable['relatedField'];
+                echo "'{$tableName}Mods' => \${$tableName}Mods,\n";
+            }
+        ?>            
     ]) ?>
 
 </div>

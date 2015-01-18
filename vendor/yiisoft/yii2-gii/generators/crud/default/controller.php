@@ -39,6 +39,7 @@ use yii\data\ActiveDataProvider;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Model;
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -102,7 +103,91 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionCreate()
     {
         $model = new <?= $modelClass ?>();
+        <?php
+            $schema = $generator->getTableSchema();
+            $masterTable = $schema->fullName;
+          
+            $relatedDetailTables = $generator->getRelatedTableAndFields($masterTable);
+            foreach ($relatedDetailTables as $relatedTable){
+                $tableName = $relatedTable['tabelName'];
+                $modGen = new yii\gii\generators\model\Generator;
+                $relatedClassName = $modGen->generateClassName($tableName);
 
+                echo "\${$tableName}Mods = [];\n";
+            }
+        ?>
+        
+        if ($model->load(Yii::$app->request->post())){            
+        <?php
+        foreach ($relatedDetailTables as $relatedTable){
+            $tableName = $relatedTable['tabelName'];
+            $modGen = new yii\gii\generators\model\Generator;
+            $relatedClassName = $modGen->generateClassName($tableName); 
+            $relTablePk = $generator->getPrimaryKeyOfTable($tableName);
+            ?>    
+            $<?= $tableName; ?>Mods = Model::createMultiple(\app\models\<?= $relatedClassName; ?>::classname(), $<?= $tableName; ?>Mods);
+            Model::loadMultiple($<?= $tableName; ?>Mods, Yii::$app->request->post());
+            
+        <?php    
+        }
+        ?>
+        
+            $valid = $model->validate();
+            <?php
+            foreach ($relatedDetailTables as $relatedTable){
+                $tableName = $relatedTable['tabelName'];
+                ?>
+            $valid = Model::validateMultiple($<?= $tableName; ?>Mods) && $valid;
+            <?php
+            }
+            ?>
+            
+            if ($valid) {
+                if ($flag = $model->save(false)) {
+                <?php
+                $tablePk = $generator->getPrimaryKeyOfTable();
+                foreach ($relatedDetailTables as $relatedTable){
+                    $tableName = $relatedTable['tabelName'];
+                    $fieldName = $relatedTable['relatedField'];
+                    $modGen = new yii\gii\generators\model\Generator;
+                    $relatedClassName = $modGen->generateClassName($tableName);                     
+                    $relTablePk = $generator->getPrimaryKeyOfTable($tableName);
+                ?>               
+                foreach ($<?= $tableName; ?>Mods as $<?= $tableName; ?>Mod) {
+                    $<?= $tableName; ?>Mod-><?= $fieldName; ?> = $model-><?= $tablePk; ?>;
+                    if (!($flag = $<?= $tableName; ?>Mod->save(false))) {
+                        break;
+                    }
+                }                
+                <?php
+                }
+                ?>
+                
+                if ($flag) {
+                    return $this->redirect(['view', <?= $urlParams ?>]);
+                }                
+            }
+
+        }
+            else{
+
+            }   
+        }
+        return $this->render('create', [
+            'model' => $model,
+            <?php
+            $relatedDetailTables = $generator->getRelatedTableAndFields($masterTable);
+            foreach ($relatedDetailTables as $relatedTable){
+                $tableName = $relatedTable['tabelName'];
+                $fieldName = $relatedTable['relatedField'];
+                echo "'{$tableName}Mods' => \${$tableName}Mods,\n";
+            }                
+            ?>
+
+        ]);
+        
+        
+        /*
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', <?= $urlParams ?>]);
         } else {
@@ -110,6 +195,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 'model' => $model,
             ]);
         }
+        */
     }
 
     /**
@@ -121,14 +207,96 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionUpdate(<?= $actionParams ?>)
     {
         $model = $this->findModel(<?= $actionParams ?>);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        <?php
+            $schema = $generator->getTableSchema();
+            $masterTable = $schema->fullName;
+          
+            $relatedDetailTables = $generator->getRelatedTableAndFields($masterTable);
+            foreach ($relatedDetailTables as $relatedTable){
+                $tableName = $relatedTable['tabelName'];
+                $fieldName = $relatedTable['relatedField'];
+                
+                
+                $modGen = new yii\gii\generators\model\Generator;
+                $relatedClassName = $modGen->generateClassName($tableName);
+                $relationName = $modGen->generateRelationName([], $modelClass, '', $relatedClassName, true);        
+                $relationName = lcfirst($relationName);
+//                $relationName = 'countries';
+                echo "\${$tableName}Mods = \$model->$relationName;\n";
+            }
+        ?>
+        
+        if ($model->load(Yii::$app->request->post())){            
+        <?php
+        foreach ($relatedDetailTables as $relatedTable){
+            $tableName = $relatedTable['tabelName'];
+            $modGen = new yii\gii\generators\model\Generator;
+            $relatedClassName = $modGen->generateClassName($tableName); 
+            $relTablePk = $generator->getPrimaryKeyOfTable($tableName);
+            ?>
+            $old<?= $tableName; ?>IDs = \yii\helpers\ArrayHelper::map($<?= $tableName; ?>Mods, '<?= $relTablePk; ?>', '<?= $relTablePk; ?>');
+            $<?= $tableName; ?>Mods = Model::createMultiple(\app\models\<?= $relatedClassName; ?>::classname(), $<?= $tableName; ?>Mods);
+            Model::loadMultiple($<?= $tableName; ?>Mods, Yii::$app->request->post());
+            $deleted<?= $tableName; ?>IDs = array_diff($old<?= $tableName; ?>IDs, array_filter(\yii\helpers\ArrayHelper::map($<?= $tableName; ?>Mods, '<?= $relTablePk; ?>', '<?= $relTablePk; ?>')));
+            
+        <?php    
         }
+        ?>
+        
+            $valid = $model->validate();
+            <?php
+            foreach ($relatedDetailTables as $relatedTable){
+                $tableName = $relatedTable['tabelName'];
+                ?>
+            $valid = Model::validateMultiple($<?= $tableName; ?>Mods) && $valid;
+            <?php
+            }
+            ?>
+            
+            if ($valid) {
+                if ($flag = $model->save(false)) {
+                <?php
+                foreach ($relatedDetailTables as $relatedTable){
+                    $tableName = $relatedTable['tabelName'];
+                    $modGen = new yii\gii\generators\model\Generator;
+                    $relatedClassName = $modGen->generateClassName($tableName);                     
+                    $relTablePk = $generator->getPrimaryKeyOfTable($tableName);
+                ?>
+                if (! empty($deleted<?= $tableName; ?>IDs)) {
+                    \app\models\<?= $relatedClassName; ?>::deleteAll(['<?= $relTablePk; ?>' => $deleted<?= $tableName; ?>IDs]);
+                }                
+                foreach ($<?= $tableName; ?>Mods as $<?= $tableName; ?>Mod) {
+                    if (!($flag = $<?= $tableName; ?>Mod->save(false))) {
+                        break;
+                    }
+                }                
+                <?php
+                }
+                ?>
+                
+                if ($flag) {
+                    return $this->redirect(['view', <?= $urlParams ?>]);
+                }                
+            }
+
+        }
+            else{
+
+            }   
+        }
+        return $this->render('update', [
+            'model' => $model,
+            <?php
+            $relatedDetailTables = $generator->getRelatedTableAndFields($masterTable);
+            foreach ($relatedDetailTables as $relatedTable){
+                $tableName = $relatedTable['tabelName'];
+                $fieldName = $relatedTable['relatedField'];
+                echo "'{$tableName}Mods' => \${$tableName}Mods,\n";
+            }                
+            ?>
+
+        ]);
+        
     }
 
     /**

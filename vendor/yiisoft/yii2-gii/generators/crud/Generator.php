@@ -162,7 +162,7 @@ class Generator extends \yii\gii\Generator {
                }
 
                //don't add detailed files here
-               if ($file === '_detail_grid.php') {
+               if ($file === '_detail_grid.php' || $file === '_detail_row.php') {
                     continue;
                }
 
@@ -170,11 +170,30 @@ class Generator extends \yii\gii\Generator {
                     $files[] = new CodeFile("$viewPath/$file", $this->render("views/$file"));
                }
           }
-          $masterTable = 'continent';
+
+          $schema = $this->getTableSchema();
+          $masterTable = $schema->fullName;
+          
           $relatedDetailTables = $this->getRelatedTableAndFields($masterTable);
-                         echo '<pre>';
-                         echo print_r($relatedDetailTables);
-                         echo '</pre>';
+//         echo '<pre>';
+//         echo $masterTable . '<br>';
+//         echo print_r($relatedDetailTables);
+//         echo '</pre>';
+         
+         foreach ($relatedDetailTables as $relatedTable){
+             $tableName = $relatedTable['tabelName'];
+             $fieldName = $relatedTable['relatedField'];
+             
+             //grid file
+             $file = '_' . $tableName . '_grid.php';
+             $files[] = new CodeFile("$viewPath/$file", $this->render("views/_detail_grid.php", ['tableName' => $tableName, 'fieldName' => $fieldName]));
+             
+             //row file
+             $file = '_' . $tableName . '_row.php';
+             $files[] = new CodeFile("$viewPath/$file", $this->render("views/_detail_row.php", ['tableName' => $tableName, 'fieldName' => $fieldName]));
+             
+         }
+                         
           return $files;
      }
 
@@ -301,6 +320,94 @@ class Generator extends \yii\gii\Generator {
           }
      }
 
+     public function generateTabularActiveField($tableName, $attribute) {
+         $db = Yii::$app->get('db', false);
+         $tableSchema = $db->getSchema()->getTableSchema($tableName);
+
+          if ($tableSchema === false || !isset($tableSchema->columns[$attribute])) {
+               if (preg_match('/^(password|pass|passwd|passcode)$/i', $attribute)) {
+                    return "\$form->field(\${$tableName}Mod, '$attribute', ['template' => '{input}{hint}{error}'])->passwordInput()";
+               } else {
+                    return "\$form->field(\${$tableName}Mod, '$attribute', ['template' => '{input}{hint}{error}'])";
+               }
+          }
+          $column = $tableSchema->columns[$attribute];
+          
+          if($column->isPrimaryKey){
+                return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->textInput(['readonly' => true, 'style' => 'width : 60px']);";
+          }elseif ($column->phpType === 'boolean') {
+                return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->checkbox([], false)";
+          } elseif ($column->type === 'smallint' && $column->size == 1){
+                return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->checkbox([], false)";
+          }elseif ($column->type === 'text') {
+               return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->textarea(['rows' => 6])";
+          } elseif ($column->type === 'date') {
+               return " ''
+                ?>
+                 <?php
+    echo \kartik\date\DatePicker::widget([
+        'model' => \${$tableName}Mod,
+        'attribute' => \"[\$index]$attribute\",
+        'options' => ['placeholder' => 'Select date ...'],
+        'pluginOptions' => [      
+            'todayHighlight' => true,
+            'autoclose'=>true,
+            'format' => 'yyyy-mm-dd'                    
+        ]
+]);
+    ?>
+    <?= ''
+             ";
+          } elseif ($column->type === 'datetime') {
+               return " ''
+                ?>
+                 <?php
+    echo kartik\datetime\DateTimePicker::widget([
+        'model' => \${$tableName}Mod,
+        'attribute' => \"[\$index]$attribute\",
+        'options' => ['placeholder' => 'Select time ...'],
+        'pluginOptions' => [      
+            'todayHighlight' => true,
+            'autoclose'=>true,
+            'format' => 'yyyy-mm-dd hh:ii'                    
+        ]
+]);
+    ?>
+    <?= ''
+             ";
+          } elseif ($column->type === 'integer' && $this->getForeignKeyInfo($attribute, $tableName) !== null) {
+               $foreignKeyInfo = $this->getForeignKeyInfo($attribute, $tableName);
+               $foreignTable = $foreignKeyInfo['foreignTable'];
+               $foreignKey = $foreignKeyInfo['foreignKey'];
+
+
+               $modGen = new yii\gii\generators\model\Generator;
+               $className = $modGen->generateClassName($foreignTable);
+
+               $foreignFieldName = $this->getNameAttributeOfTable($foreignTable);
+
+               return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->dropDownList(\yii\helpers\ArrayHelper::map(app\models\\{$className}::find()->orderBy('$foreignFieldName')->asArray()->all(), '$foreignKey', '$foreignFieldName'))";
+          } else {
+               if (preg_match('/^(password|pass|passwd|passcode)$/i', $column->name)) {
+                    $input = 'passwordInput';
+               } else {
+                    $input = 'textInput';
+               }
+               if (is_array($column->enumValues) && count($column->enumValues) > 0) {
+                    $dropDownOptions = [];
+                    foreach ($column->enumValues as $enumValue) {
+                         $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
+                    }
+                    return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->dropDownList("
+                            . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => ''])";
+               } elseif ($column->phpType !== 'string' || $column->size === null) {
+                    return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->$input()";
+               } else {
+                    return "\$form->field(\${$tableName}Mod, \"[\$index]$attribute\", ['template' => '{input}{hint}{error}'])->$input(['maxlength' => $column->size])";
+               }
+          }
+     }
+     
      public function generateKartikField($attribute) {
           $tableSchema = $this->getTableSchema();
           $column = $tableSchema->columns[$attribute];
@@ -647,8 +754,14 @@ class Generator extends \yii\gii\Generator {
           return true;
      }
 
-     public function getForeignKeyInfo($columnName) {
-          $tableSchema = $this->getTableSchema();
+     public function getForeignKeyInfo($columnName, $tableName = '') {
+         if($tableName == ''){
+            $tableSchema = $this->getTableSchema();
+         }
+         else{
+             $db = Yii::$app->get('db', false);
+             $tableSchema = $db->getSchema()->getTableSchema($tableName);
+         }
 
           $foreignKeys = [];
 
@@ -748,10 +861,10 @@ class Generator extends \yii\gii\Generator {
 //                    )
                     
                     if($fKey['0'] == $masterTable){
-//                         echo '<pre>';
-//                         echo $tableName . '</br>';
-//                         echo print_r($fKey);
-//                         echo '</pre>';
+                         echo '<pre>';
+                         echo $tableName . '</br>';
+                         echo print_r($fKey);
+                         echo '</pre>';
                          $relatedTable = [];
                          foreach ($fKey as $index => $value){
                               if($index == '0'){
@@ -765,9 +878,31 @@ class Generator extends \yii\gii\Generator {
                     }
 
                }
-          }
-          
-          return $relatedTables;
-     }
+        }
 
+        return $relatedTables;
+    }
+
+    public function getColumnNamesOfTable($tableName) {
+        $db = Yii::$app->get('db', false);
+        $schema = $db->getSchema()->getTableSchema($tableName);
+        $fields = [];
+        foreach ($schema->columns as $columnName => $column) {
+            $fields[] = $columnName;
+        }
+        
+        return $fields;
+    }
+    
+    public function getPrimaryKeyOfTable($tableName = '') {
+         if($tableName == ''){
+            $tableSchema = $this->getTableSchema();
+         }
+         else{
+             $db = Yii::$app->get('db', false);
+             $tableSchema = $db->getSchema()->getTableSchema($tableName);
+         } 
+         
+         return $tableSchema->primaryKey[0];
+    }
 }

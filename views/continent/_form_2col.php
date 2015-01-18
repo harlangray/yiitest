@@ -3,6 +3,8 @@ use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 
+use yii\helpers\ArrayHelper;
+use app\models\City;
 
 $form = ActiveForm::begin();
 echo Form::widget([
@@ -10,13 +12,13 @@ echo Form::widget([
     'form' => $form,
     'columns' => 2,
     'attributes' => [
-    'co_name' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
+    'co_main_city_id' => ['type'=>Form::INPUT_DROPDOWN_LIST, 'items' => ArrayHelper::map(City::find()->orderBy('c_name')->asArray()->all(), 'c_id', 'c_name'),'options'=>['placeholder'=>'']],
             
-                'co_date_field' => ['type'=>Form::INPUT_WIDGET, 'widgetClass'=>'\kartik\widgets\DatePicker','hint'=>'','pluginOptions'=>['autoclose'=>true]],
+                'co_name' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
             
-                'co_datetime_field' => ['type'=>Form::INPUT_WIDGET, 'widgetClass'=>'\kartik\widgets\DateTimePicker','hint'=>'','pluginOptions'=>['autoclose'=>true]],
+                'co_area' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
             
-                'co_created_on' => ['type'=>Form::INPUT_WIDGET, 'widgetClass'=>'\kartik\widgets\DatePicker','hint'=>'','pluginOptions'=>['autoclose'=>true]],
+                'co_description' => ['type'=>Form::INPUT_TEXTAREA, 'options'=>['placeholder'=>'']],
             
                 ]
 ]);

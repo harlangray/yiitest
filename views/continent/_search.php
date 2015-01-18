@@ -17,23 +17,25 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'co_id') ?>
 
+    <?= $form->field($model, 'co_main_city_id') ?>
+
     <?= $form->field($model, 'co_name') ?>
 
-    <?= $form->field($model, 'co_date_field') ?>
+    <?= $form->field($model, 'co_area') ?>
 
-    <?= $form->field($model, 'co_datetime_field') ?>
-
-    <?= $form->field($model, 'co_created_on') ?>
-
-    <?php // echo $form->field($model, 'co_created_at') ?>
+    <?= $form->field($model, 'co_description') ?>
 
     <?php // echo $form->field($model, 'co_created_by') ?>
 
-    <?php // echo $form->field($model, 'co_is_deleted') ?>
+    <?php // echo $form->field($model, 'co_created_at') ?>
 
     <?php // echo $form->field($model, 'co_updated_by') ?>
 
     <?php // echo $form->field($model, 'co_updated_at') ?>
+
+    <?php // echo $form->field($model, 'co_is_deleted') ?>
+
+    <?php // echo $form->field($model, 'co_deleted_by') ?>
 
     <?php // echo $form->field($model, 'co_deleted_at') ?>
 

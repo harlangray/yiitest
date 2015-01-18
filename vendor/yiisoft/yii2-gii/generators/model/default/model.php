@@ -53,6 +53,9 @@ namespace <?= $generator->ns ?>;
 
 use Yii;
 <?php 
+//echo '<pre>';
+//echo print_r($relations);
+//echo '</pre>';
     $createdTimeColumn = $generator->findMatchingField('created_at');
     $updatedTimeColumn = $generator->findMatchingField('updated_at'); 
     
@@ -121,6 +124,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     {
         <?= $relation[0] . "\n" ?>
     }
+<?php endforeach; ?>
     
     public function behaviors() {
         return [
@@ -209,5 +213,5 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         return parent::find()->where(['<?= $deletedColumn?>' => false]);
     }    
     <?php } ?>
-<?php endforeach; ?>
+
 }

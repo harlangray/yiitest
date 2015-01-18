@@ -3,9 +3,6 @@ use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 
-use yii\helpers\ArrayHelper;
-use app\models\Continent;
-use app\models\User;
 
 $form = ActiveForm::begin();
 echo Form::widget([
@@ -13,11 +10,9 @@ echo Form::widget([
     'form' => $form,
     'columns' => 2,
     'attributes' => [
-    'cn_continent_id' => ['type'=>Form::INPUT_DROPDOWN_LIST, 'items' => ArrayHelper::map(Continent::find()->orderBy('co_name')->asArray()->all(), 'co_id', 'co_name'),'options'=>['placeholder'=>'']],
+    'c_name' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
             
-                'cn_name' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
-            
-                'cn_area' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
+                'c_population' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
             
                 ]
 ]);

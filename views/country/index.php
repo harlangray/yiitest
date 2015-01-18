@@ -28,14 +28,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'cn_id',
-            'cn_description',
             [
                 'attribute' => 'cn_continent_id',
                 'value'=>'cnContinent.co_name',
             ],
+            'cn_name',
+            'cn_area',
             'cn_is_deleted',
-            'cn_deleted_at',
-//            'cn_deleted_by',
+/*            'cn_deleted_at',*/
+/*            'cn_deleted_by',*/
+/*            [
+                'attribute' => 'cn_created_by',
+                'value'=>'cnCreatedBy.username',
+            ],*/
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Continent;
-use app\models\ContinentSearch;
+use app\models\City;
+use app\models\CitySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Model;
 
 /**
- * ContinentController implements the CRUD actions for Continent model.
+ * CityController implements the CRUD actions for City model.
  */
-class ContinentController extends Controller
+class CityController extends Controller
 {
     public function behaviors()
     {
@@ -28,12 +28,12 @@ class ContinentController extends Controller
     }
 
     /**
-     * Lists all Continent models.
+     * Lists all City models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ContinentSearch();
+        $searchModel = new CitySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -43,7 +43,7 @@ class ContinentController extends Controller
     }
 
     /**
-     * Displays a single Continent model.
+     * Displays a single City model.
      * @param integer $id
      * @return mixed
      */
@@ -55,36 +55,49 @@ class ContinentController extends Controller
     }
 
     /**
-     * Creates a new Continent model.
+     * Creates a new City model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Continent();
-        $countryMods = [];
+        $model = new City();
+        $continentMods = [];
+$countryMods = [];
         
         if ($model->load(Yii::$app->request->post())){            
+            
+            $continentMods = Model::createMultiple(\app\models\Continent::classname(), $continentMods);
+            Model::loadMultiple($continentMods, Yii::$app->request->post());
+            
             
             $countryMods = Model::createMultiple(\app\models\Country::classname(), $countryMods);
             Model::loadMultiple($countryMods, Yii::$app->request->post());
             
                 
             $valid = $model->validate();
+                        $valid = Model::validateMultiple($continentMods) && $valid;
                         $valid = Model::validateMultiple($countryMods) && $valid;
                         
             if ($valid) {
                 if ($flag = $model->save(false)) {
                                
+                foreach ($continentMods as $continentMod) {
+                    $continentMod->co_main_city_id = $model->c_id;
+                    if (!($flag = $continentMod->save(false))) {
+                        break;
+                    }
+                }                
+                               
                 foreach ($countryMods as $countryMod) {
-                    $countryMod->cn_continent_id = $model->co_id;
+                    $countryMod->cn_capital_city_id = $model->c_id;
                     if (!($flag = $countryMod->save(false))) {
                         break;
                     }
                 }                
                                 
                 if ($flag) {
-                    return $this->redirect(['view', 'id' => $model->co_id]);
+                    return $this->redirect(['view', 'id' => $model->c_id]);
                 }                
             }
 
@@ -95,14 +108,15 @@ class ContinentController extends Controller
         }
         return $this->render('create', [
             'model' => $model,
-            'countryMods' => $countryMods,
+            'continentMods' => $continentMods,
+'countryMods' => $countryMods,
 
         ]);
         
         
         /*
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->co_id]);
+            return $this->redirect(['view', 'id' => $model->c_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -112,7 +126,7 @@ class ContinentController extends Controller
     }
 
     /**
-     * Updates an existing Continent model.
+     * Updates an existing City model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -120,9 +134,15 @@ class ContinentController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $countryMods = $model->countries;
+        $continentMods = $model->continents;
+$countryMods = $model->countries;
         
         if ($model->load(Yii::$app->request->post())){            
+                    $oldcontinentIDs = \yii\helpers\ArrayHelper::map($continentMods, 'co_id', 'co_id');
+            $continentMods = Model::createMultiple(\app\models\Continent::classname(), $continentMods);
+            Model::loadMultiple($continentMods, Yii::$app->request->post());
+            $deletedcontinentIDs = array_diff($oldcontinentIDs, array_filter(\yii\helpers\ArrayHelper::map($continentMods, 'co_id', 'co_id')));
+            
                     $oldcountryIDs = \yii\helpers\ArrayHelper::map($countryMods, 'cn_id', 'cn_id');
             $countryMods = Model::createMultiple(\app\models\Country::classname(), $countryMods);
             Model::loadMultiple($countryMods, Yii::$app->request->post());
@@ -130,10 +150,19 @@ class ContinentController extends Controller
             
                 
             $valid = $model->validate();
+                        $valid = Model::validateMultiple($continentMods) && $valid;
                         $valid = Model::validateMultiple($countryMods) && $valid;
                         
             if ($valid) {
                 if ($flag = $model->save(false)) {
+                                if (! empty($deletedcontinentIDs)) {
+                    \app\models\Continent::deleteAll(['co_id' => $deletedcontinentIDs]);
+                }                
+                foreach ($continentMods as $continentMod) {
+                    if (!($flag = $continentMod->save(false))) {
+                        break;
+                    }
+                }                
                                 if (! empty($deletedcountryIDs)) {
                     \app\models\Country::deleteAll(['cn_id' => $deletedcountryIDs]);
                 }                
@@ -144,7 +173,7 @@ class ContinentController extends Controller
                 }                
                                 
                 if ($flag) {
-                    return $this->redirect(['view', 'id' => $model->co_id]);
+                    return $this->redirect(['view', 'id' => $model->c_id]);
                 }                
             }
 
@@ -155,14 +184,15 @@ class ContinentController extends Controller
         }
         return $this->render('update', [
             'model' => $model,
-            'countryMods' => $countryMods,
+            'continentMods' => $continentMods,
+'countryMods' => $countryMods,
 
         ]);
         
     }
 
     /**
-     * Deletes an existing Continent model.
+     * Deletes an existing City model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -175,15 +205,15 @@ class ContinentController extends Controller
     }
 
     /**
-     * Finds the Continent model based on its primary key value.
+     * Finds the City model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Continent the loaded model
+     * @return City the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Continent::findOne($id)) !== null) {
+        if (($model = City::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Country;
+use app\models\City;
 
 /**
- * CountrySearch represents the model behind the search form about `app\models\Country`.
+ * CitySearch represents the model behind the search form about `app\models\City`.
  */
-class CountrySearch extends Country
+class CitySearch extends City
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class CountrySearch extends Country
     public function rules()
     {
         return [
-            [['cn_id', 'cn_continent_id', 'cn_area', 'cn_is_deleted', 'cn_deleted_by', 'cn_created_by'], 'integer'],
-            [['cn_name', 'cn_deleted_at'], 'safe'],
+            [['c_id', 'c_population'], 'integer'],
+            [['c_name'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class CountrySearch extends Country
      */
     public function search($params)
     {
-        $query = Country::find();
+        $query = City::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,16 +52,11 @@ class CountrySearch extends Country
         }
 
         $query->andFilterWhere([
-            'cn_id' => $this->cn_id,
-            'cn_continent_id' => $this->cn_continent_id,
-            'cn_area' => $this->cn_area,
-            'cn_is_deleted' => $this->cn_is_deleted,
-            'cn_deleted_at' => $this->cn_deleted_at,
-            'cn_deleted_by' => $this->cn_deleted_by,
-            'cn_created_by' => $this->cn_created_by,
+            'c_id' => $this->c_id,
+            'c_population' => $this->c_population,
         ]);
 
-        $query->andFilterWhere(['like', 'cn_name', $this->cn_name]);
+        $query->andFilterWhere(['like', 'c_name', $this->c_name]);
 
         return $dataProvider;
     }

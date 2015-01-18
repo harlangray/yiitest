@@ -7,17 +7,19 @@ use yii\db\Expression;/**
  * This is the model class for table "continent".
  *
  * @property integer $co_id
+ * @property integer $co_main_city_id
  * @property string $co_name
- * @property string $co_date_field
- * @property string $co_datetime_field
- * @property string $co_created_on
- * @property string $co_created_at
+ * @property integer $co_area
+ * @property string $co_description
  * @property integer $co_created_by
- * @property integer $co_is_deleted
+ * @property string $co_created_at
  * @property integer $co_updated_by
  * @property string $co_updated_at
+ * @property integer $co_is_deleted
+ * @property integer $co_deleted_by
  * @property string $co_deleted_at
  *
+ * @property City $coMainCity
  * @property Country[] $countries
  */
 class Continent extends \yii\db\ActiveRecord
@@ -36,9 +38,10 @@ class Continent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['co_name', 'co_date_field', 'co_datetime_field', 'co_created_on'], 'required'],
-            [['co_date_field', 'co_datetime_field', 'co_created_on', 'co_created_at', 'co_updated_at', 'co_deleted_at'], 'safe'],
-            [['co_created_by', 'co_is_deleted', 'co_updated_by'], 'integer'],
+            [['co_main_city_id', 'co_name', 'co_area', 'co_description'], 'required'],
+            [['co_main_city_id', 'co_area', 'co_created_by', 'co_updated_by', 'co_is_deleted', 'co_deleted_by'], 'integer'],
+            [['co_description'], 'string'],
+            [['co_created_at', 'co_updated_at', 'co_deleted_at'], 'safe'],
             [['co_name'], 'string', 'max' => 20]
         ];
     }
@@ -50,17 +53,26 @@ class Continent extends \yii\db\ActiveRecord
     {
         return [
             'co_id' => 'ID',
+            'co_main_city_id' => 'Main City',
             'co_name' => 'Name',
-            'co_date_field' => 'Date Field',
-            'co_datetime_field' => 'Datetime Field',
-            'co_created_on' => 'Created On',
-            'co_created_at' => 'Created At',
+            'co_area' => 'Area',
+            'co_description' => 'Description',
             'co_created_by' => 'Created By',
-            'co_is_deleted' => 'Is Deleted',
+            'co_created_at' => 'Created At',
             'co_updated_by' => 'Updated By',
             'co_updated_at' => 'Updated At',
+            'co_is_deleted' => 'Is Deleted',
+            'co_deleted_by' => 'Deleted By',
             'co_deleted_at' => 'Deleted At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCoMainCity()
+    {
+        return $this->hasOne(City::className(), ['c_id' => 'co_main_city_id']);
     }
 
     /**
@@ -112,7 +124,7 @@ class Continent extends \yii\db\ActiveRecord
                         'SoftDeleteBehavior' => [
                 'class' => 'yii\behaviors\SoftDeleteBehavior',
                 'deletedColumn' => 'co_is_deleted',
-                'deletedByColumn' => '',
+                'deletedByColumn' => 'co_deleted_by',
                 'deletedTimeColumn' => 'co_deleted_at',
             ]                
                     ];
@@ -121,4 +133,5 @@ class Continent extends \yii\db\ActiveRecord
         public static function find() {
         return parent::find()->where(['co_is_deleted' => false]);
     }    
-    }
+    
+}

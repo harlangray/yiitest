@@ -74,6 +74,25 @@ foreach ($attributChunks as $attributes) {
     
     ]
 ]);
+
+<?php
+    $schema = $generator->getTableSchema();
+    $masterTable = $schema->fullName;  
+  
+    $relatedDetailTables = $generator->getRelatedTableAndFields($masterTable);
+    foreach ($relatedDetailTables as $relatedTable){
+        $tableName = $relatedTable['tabelName'];
+        $fieldName = $relatedTable['relatedField'];
+?>
+     echo $this->render('_<?= $tableName; ?>_grid', [
+         'form' => $form,
+         'model' => $model,
+         '<?= $tableName; ?>Mods' => $<?= $tableName; ?>Mods,
+     ]);
+<?php
+    }
+?>
+
 <?= '?>'?>
     <div class="form-group">
         <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

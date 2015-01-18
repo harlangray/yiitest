@@ -6,6 +6,7 @@ use kartik\builder\Form;
 
 use yii\helpers\ArrayHelper;
 use app\models\Continent;
+use app\models\User;
 
 $form = ActiveForm::begin();
 echo FormGrid::widget([
@@ -17,9 +18,11 @@ echo FormGrid::widget([
     
 [
 'attributes' => [
-        'cn_description' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
+        'cn_continent_id' => ['type'=>Form::INPUT_DROPDOWN_LIST, 'items' => ArrayHelper::map(Continent::find()->orderBy('co_name')->asArray()->all(), 'co_id', 'co_name'),'options'=>['placeholder'=>'']],
 
-                        'cn_continent_id' => ['type'=>Form::INPUT_DROPDOWN_LIST, 'items' => ArrayHelper::map(Continent::find()->orderBy('co_name')->asArray()->all(), 'co_id', 'co_name'),'options'=>['placeholder'=>'']],
+                        'cn_name' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
+
+                        'cn_area' => ['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'']],
 
                 ],
 ],
@@ -27,6 +30,8 @@ echo FormGrid::widget([
     
     ]
 ]);
+
+
 ?>    <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

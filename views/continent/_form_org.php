@@ -2,8 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\widgets\DatePicker;
 use kartik\widgets\DateTimePicker;
+use yii\helpers\ArrayHelper;
+use app\models\City;
 /* @var $this yii\web\View */
 /* @var $model app\models\Continent */
 /* @var $form yii\widgets\ActiveForm */
@@ -13,61 +14,13 @@ use kartik\widgets\DateTimePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'co_main_city_id')->dropDownList(ArrayHelper::map(City::find()->orderBy('c_name')->asArray()->all(), 'c_id', 'c_name')) ?>
+
     <?= $form->field($model, 'co_name')->textInput(['maxlength' => 20]) ?>
 
-    <?=  ''
-                ?>
-                 <?php
-    echo Html::activeLabel($model,'co_date_field');;
-    echo DatePicker::widget([
-        'model' => $model,
-        'attribute' => 'co_date_field',
-        'options' => ['placeholder' => 'Select date ...'],
-        'pluginOptions' => [      
-            'todayHighlight' => true,
-            'autoclose'=>true,
-            'format' => 'yyyy-mm-dd'                    
-        ]
-]);
-    ?>
-    <?= ''
-              ?>
+    <?= $form->field($model, 'co_area')->textInput() ?>
 
-    <?=  ''
-                ?>
-                 <?php
-    echo Html::activeLabel($model,'co_datetime_field');;
-    echo DateTimePicker::widget([
-        'model' => $model,
-        'attribute' => 'co_datetime_field',
-        'options' => ['placeholder' => 'Select time ...'],
-        'pluginOptions' => [      
-            'todayHighlight' => true,
-            'autoclose'=>true,
-            'format' => 'yyyy-mm-dd hh:ii'                    
-        ]
-]);
-    ?>
-    <?= ''
-              ?>
-
-    <?=  ''
-                ?>
-                 <?php
-    echo Html::activeLabel($model,'co_created_on');;
-    echo DatePicker::widget([
-        'model' => $model,
-        'attribute' => 'co_created_on',
-        'options' => ['placeholder' => 'Select date ...'],
-        'pluginOptions' => [      
-            'todayHighlight' => true,
-            'autoclose'=>true,
-            'format' => 'yyyy-mm-dd'                    
-        ]
-]);
-    ?>
-    <?= ''
-              ?>
+    <?= $form->field($model, 'co_description')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
