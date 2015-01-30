@@ -4,7 +4,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-
+use mdm\admin\components\MenuHelper;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
@@ -32,37 +32,53 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'Continent', 'url' => ['/continent/index']],
-                    ['label' => 'Country', 'url' => ['/country/index']],
-                    ['label' => 'About', 'url' => ['/site/about']],
-                    ['label' => 'Contact', 'url' => ['/site/contact']],
-                    ['label' => 'Admin', 'url' => ['/admin']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => 'Login', 'url' => ['/user/security/login']] :
-                        ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                            'url' => ['/user/security/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
-                
-                    ['label' => 'User',
-                        'items' => [
-                            ['label' => 'Register', 'url' => ['/user/registration/register']],
-                            ['label' => 'Login', 'url' => ['/user/security/login']],
-                            ['label' => 'Request', 'url' => ['/user/recovery/request']],
-                            ['label' => 'Reset', 'url' => ['/user/recovery/reset']],
-                            ['label' => 'Profile', 'url' => ['/user/settings/profile']],
-                            ['label' => 'email', 'url' => ['/user/settings/email']],
-                            ['label' => 'Password', 'url' => ['/user/settings/password']],
-                            ['label' => 'Profile Show', 'url' => ['/user/profile/show']],
-                            ['label' => 'Manage Users', 'url' => ['/user/admin/index']],
-                            
-                        ],
-                        ]
-                    ],
-            ]);
+//            echo Nav::widget([
+//                'options' => ['class' => 'navbar-nav navbar-right'],
+//                'items' => [
+//                    ['label' => 'Home', 'url' => ['/site/index']],
+//                    ['label' => 'Continent', 'url' => ['/continent/index']],
+//                    ['label' => 'Country', 'url' => ['/country/index']],
+//                    ['label' => 'About', 'url' => ['/site/about']],
+//                    ['label' => 'Contact', 'url' => ['/site/contact']],
+//                    ['label' => 'Admin', 'url' => ['/admin']],
+//                    Yii::$app->user->isGuest ?
+//                        ['label' => 'Login', 'url' => ['/user/security/login']] :
+//                        ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+//                            'url' => ['/user/security/logout'],
+//                            'linkOptions' => ['data-method' => 'post']],
+//                
+//                    ['label' => 'User',
+//                        'items' => [
+//                            ['label' => 'Register', 'url' => ['/user/registration/register']],
+//                            ['label' => 'Login', 'url' => ['/user/security/login']],
+//                            ['label' => 'Request', 'url' => ['/user/recovery/request']],
+//                            ['label' => 'Reset', 'url' => ['/user/recovery/reset']],
+//                            ['label' => 'Profile', 'url' => ['/user/settings/profile']],
+//                            ['label' => 'email', 'url' => ['/user/settings/email']],
+//                            ['label' => 'Password', 'url' => ['/user/settings/password']],
+//                            ['label' => 'Profile Show', 'url' => ['/user/profile/show']],
+//                            ['label' => 'Manage Users', 'url' => ['/user/admin/index']],
+//                            
+//                        ],
+//                        ],
+//                    
+//                    Yii::$app->lang->getMenuItems()
+//                    ],                
+//            ]);
+         
+$menuArr = MenuHelper::getAssignedMenu(Yii::$app->user->id);
+$languageArr = Yii::$app->lang->getMenuItems();
+
+array_push($menuArr, $languageArr);
+//echo '<pre>';
+//echo print_r($menuArr);
+//echo '<pre>';
+//die();
+echo Nav::widget([
+    'options' => ['class' => 'navbar-nav navbar-right'],
+    'items' =>  $menuArr//array_merge($menuArr, $languageArr)
+]);
+
             NavBar::end();
         ?>
 

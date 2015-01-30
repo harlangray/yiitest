@@ -1,3 +1,31 @@
+version 1.7.3
+=============
+**Date:** 25-Jan-2015
+
+- (enh #26): Enhance `Widget` options to store multiple plugin config.
+- (enh #27): Set directory and URL separator rightly for the setLanguage validation.
+
+version 1.7.2
+=============
+**Date:** 20-Jan-2015
+
+- (enh #24): Revert use of DIRECTORY_SEPARATOR and use forward slash instead.
+
+version 1.7.1
+=============
+**Date:** 15-Jan-2015
+
+- (enh #23): Enhance AssetBundle for over riding empty assets from AssetManager.
+
+version 1.7.0
+=============
+**Date:** 12-Jan-2015
+
+- Fix kartik-v/yii2-widget-datepicker#10 - Language definition in pluginOptions
+- (enh #21): Implement TranslationTrait and i18N configuration.
+- (enh #22): Implement base Module class.
+- Code formatting updates as per Yii2 coding style.
+
 version 1.6.0
 =============
 **Date:** 16-Dec-2014

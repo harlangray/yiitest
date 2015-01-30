@@ -4,7 +4,7 @@
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014
  * @package yii2-widgets
  * @subpackage yii2-widget-datetimepicker
- * @version 1.2.0
+ * @version 1.4.0
  */
 
 namespace kartik\datetime;
@@ -55,7 +55,7 @@ class DateTimePicker extends \kartik\base\InputWidget
      * @var array the HTML attributes for the input tag.
      */
     public $options = [];
-
+    
     /**
      * @var mixed the calendar/time picker button configuration.
      * - if this is passed as a string, it will be displayed as is (will not be HTML encoded).
@@ -95,11 +95,14 @@ class DateTimePicker extends \kartik\base\InputWidget
      */
     public function init()
     {
+        $this->_msgCat = 'kvdatetime';
         parent::init();
         if ($this->type < 1 || $this->type > 5 || !is_int($this->type)) {
             throw new InvalidConfigException("Invalid value for the property 'type'. Must be an integer between 1 and 5.");
         }
-        $this->setLanguage('bootstrap-datetimepicker.', __DIR__ . '/assets/');
+        $this->initI18N();
+        $s = DIRECTORY_SEPARATOR;
+        $this->setLanguage('bootstrap-datetimepicker.', __DIR__ . "{$s}assets{$s}");
         $this->parseDateFormat('datetime');
         $this->_id = ($this->type == self::TYPE_INPUT) ? 'jQuery("#' . $this->options['id'] . '")' : 'jQuery("#' . $this->options['id'] . '").parent()';
         $this->registerAssets();
@@ -146,7 +149,7 @@ class DateTimePicker extends \kartik\base\InputWidget
         $icon = ($type === 'picker') ? 'calendar' : 'remove';
         $icon = '<span class="glyphicon glyphicon-' . ArrayHelper::remove($options, 'icon', $icon) . '"></span>';
         if (empty($options['title'])) {
-            $title = ($type === 'picker') ? Yii::t('app', 'Select date & time') : Yii::t('app', 'Clear field');
+            $title = ($type === 'picker') ? Yii::t('kvdatetime', 'Select date & time') : Yii::t('kvdatetime', 'Clear field');
             if ($title != false) {
                 $options['title'] = $title;
             }
@@ -204,7 +207,7 @@ class DateTimePicker extends \kartik\base\InputWidget
             return Html::tag('div', '', $this->_container) . $input;
         }
     }
-
+    
     /**
      * Registers the needed assets
      */

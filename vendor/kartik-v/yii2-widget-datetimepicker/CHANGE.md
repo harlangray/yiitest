@@ -1,3 +1,19 @@
+version 1.4.0
+=============
+**Date:** 25-Jan-2015
+
+- (bug #12): Fix directory separator for assets path in setLanguage.
+
+version 1.3.0
+=============
+**Date:** 12-Jan-2015
+
+- (enh #8): Create locale bootstrap-datetimepicker.tj.js 
+- (enh #9): Set i18N translation settings for 'kvdatetime' message category.
+- (enh #10): German translations added.
+- Code formatting updates as per Yii2 standards.
+- Revamp to use new Krajee base InputWidget and TranslationTrait.
+
 version 1.2.0
 =============
 **Date:** 04-Dec-2014

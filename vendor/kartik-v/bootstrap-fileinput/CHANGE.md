@@ -1,3 +1,31 @@
+version 4.1.6
+=============
+**Date:** 20-Jan-2015
+
+1. (enh #124): Allow submission of extra data even if no files are selected.
+2. (enh #131): Allow empty values in extra data to be submitted.
+3. (enh #136):Create new upload method that can be called externally.
+4. (enh #137): Trigger new events - `filedisabled` and `fileenabled`.
+5. (enh #139): Reset file stack correctly on ajax upload completion.
+
+version 4.1.5
+=============
+**Date:** 12-Jan-2015
+
+1. (bug #100, #101): Set right params for error thrown during reading of files.
+2. (bug #104): Fix formdata not defined.
+3. (enh #105): Expose current jqXHR object on ajax events.
+4. (enh #106): Enhance events for ajax requests and enable cancelling sync uploads
+5. (enh #108): Add nuget package.
+6. (bug #112): Fix undefined filestack for individual file upload within preview.
+7. (bug #113): Icon layout template undefined when using user template.
+8. (bug #114): Prevent multiple file selection when using single file configuration.
+9. (enh #115): Autosize file caption responsively on window resize.
+10. (enh #116): Hide remove and upload buttons until unless file(s) are selected.
+11. (enh #119): Enhance caption to include ellipsis for long file names
+12. (bug #120): Correct multiple iterations of upload for async batch uploads.
+13. (enh #121): Animate progress bars by default for upload progress.
+
 version 4.1.4
 =============
 **Date:** 26-Dec-2014

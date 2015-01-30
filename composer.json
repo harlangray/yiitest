@@ -23,12 +23,14 @@
         "yiisoft/yii2-swiftmailer": "*",
         "mdmsoft/yii2-admin": "*",
         "kartik-v/yii2-widgets": "*",
-        "kartik-v/yii2-builder": "dev-master"
+        "kartik-v/yii2-builder": "dev-master",
+        "harlangray/languageswitcher": "*"
+
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
         "yiisoft/yii2-debug": "*",
-        "yiisoft/yii2-gii": "*",
+        "harlangray/yii2-gii-advanced": "2.0.*@dev",
         "yiisoft/yii2-faker": "*"
     },
     "config": {
