@@ -1,18 +1,64 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Dec 08, 2014 at 05:27 පෙ.ව.
--- Server version: 5.6.21
--- PHP Version: 5.6.3
+-- Host: 127.0.0.1
+-- Generation Time: Jan 30, 2015 at 12:13 PM
+-- Server version: 5.6.17
+-- PHP Version: 5.5.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
 --
--- Database: `testyii`
+-- Database: `test`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audit_trail`
+--
+
+CREATE TABLE IF NOT EXISTS `audit_trail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `old_value` text,
+  `new_value` text,
+  `action` varchar(20) NOT NULL,
+  `model` varchar(50) NOT NULL,
+  `model_id` int(11) NOT NULL,
+  `field` varchar(20) DEFAULT NULL,
+  `stamp` datetime NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=122 ;
+
+--
+-- Dumping data for table `audit_trail`
+--
+
+INSERT INTO `audit_trail` (`id`, `old_value`, `new_value`, `action`, `model`, `model_id`, `field`, `stamp`, `user_id`) VALUES
+(107, '', '', 'CREATE', 'app\\models\\SchoolCls', 2, NULL, '2015-01-30 11:46:55', 7),
+(108, '', '2', 'SET', 'app\\models\\SchoolCls', 2, 'cl_id', '2015-01-30 11:46:55', 7),
+(109, '', 'Year 8-A', 'SET', 'app\\models\\SchoolCls', 2, 'cl_name', '2015-01-30 11:46:55', 7),
+(110, '', '7', 'SET', 'app\\models\\SchoolCls', 2, 'cl_grade', '2015-01-30 11:46:55', 7),
+(111, '', '2015-01-29', 'SET', 'app\\models\\SchoolCls', 2, 'cl_start_date', '2015-01-30 11:46:55', 7),
+(112, '', '', 'CREATE', 'app\\models\\Student', 1, NULL, '2015-01-30 11:46:55', 7),
+(113, '', '1', 'SET', 'app\\models\\Student', 1, 'st_id', '2015-01-30 11:46:55', 7),
+(114, '', '2', 'SET', 'app\\models\\Student', 1, 'st_class_id', '2015-01-30 11:46:55', 7),
+(115, '', 'Hans', 'SET', 'app\\models\\Student', 1, 'st_name', '2015-01-30 11:46:55', 7),
+(116, '', '2015-01-30', 'SET', 'app\\models\\Student', 1, 'st_date_of_birth', '2015-01-30 11:46:55', 7),
+(117, '', '', 'CREATE', 'app\\models\\Student', 2, NULL, '2015-01-30 11:46:55', 7),
+(118, '', '2', 'SET', 'app\\models\\Student', 2, 'st_id', '2015-01-30 11:46:55', 7),
+(119, '', '2', 'SET', 'app\\models\\Student', 2, 'st_class_id', '2015-01-30 11:46:55', 7),
+(120, '', 'Harlan', 'SET', 'app\\models\\Student', 2, 'st_name', '2015-01-30 11:46:55', 7),
+(121, '', '2015-01-23', 'SET', 'app\\models\\Student', 2, 'st_date_of_birth', '2015-01-30 11:46:55', 7);
 
 -- --------------------------------------------------------
 
@@ -23,7 +69,8 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `auth_assignment` (
   `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` int(11) DEFAULT NULL
+  `created_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`item_name`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -31,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `auth_assignment` (
 --
 
 INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
+('admin', '7', 1420389330),
 ('testing', '1', 1417961075);
 
 -- --------------------------------------------------------
@@ -46,7 +94,10 @@ CREATE TABLE IF NOT EXISTS `auth_item` (
   `rule_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` text COLLATE utf8_unicode_ci,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`),
+  KEY `rule_name` (`rule_name`),
+  KEY `idx-auth_item-type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -54,18 +105,21 @@ CREATE TABLE IF NOT EXISTS `auth_item` (
 --
 
 INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `created_at`, `updated_at`) VALUES
+('/*', 2, NULL, NULL, NULL, 1420389051, 1420389051),
 ('/continent/create', 2, NULL, NULL, NULL, 1417960805, 1417960805),
 ('/continent/delete', 2, NULL, NULL, NULL, 1417960805, 1417960805),
 ('/continent/update', 2, NULL, NULL, NULL, 1417960805, 1417960805),
 ('/country/create', 2, NULL, NULL, NULL, 1417960836, 1417960836),
 ('/country/delete', 2, NULL, NULL, NULL, 1417960837, 1417960837),
 ('/country/update', 2, NULL, NULL, NULL, 1417960836, 1417960836),
+('/person/create', 2, NULL, NULL, NULL, 1422073603, 1422073603),
 ('/user/admin/block', 2, NULL, NULL, NULL, 1417964440, 1417964440),
 ('/user/admin/confirm', 2, NULL, NULL, NULL, 1417964434, 1417964434),
 ('/user/admin/create', 2, NULL, NULL, NULL, 1417964420, 1417964420),
 ('/user/admin/delete', 2, NULL, NULL, NULL, 1417964437, 1417964437),
 ('/user/admin/index', 2, NULL, NULL, NULL, 1417963893, 1417963893),
 ('/user/admin/update', 2, NULL, NULL, NULL, 1417964424, 1417964424),
+('admin', 1, NULL, NULL, NULL, 1420389301, 1420389301),
 ('supper test', 1, NULL, NULL, NULL, 1417964307, 1417964363),
 ('test permission', 2, 'just a test', NULL, NULL, 1417961136, 1417961136),
 ('testing', 1, 'just a test', NULL, NULL, 1417960972, 1417964394);
@@ -78,7 +132,9 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 
 CREATE TABLE IF NOT EXISTS `auth_item_child` (
   `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL
+  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`parent`,`child`),
+  KEY `child` (`child`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -86,6 +142,7 @@ CREATE TABLE IF NOT EXISTS `auth_item_child` (
 --
 
 INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
+('admin', '/*'),
 ('test permission', '/country/create'),
 ('testing', '/country/create'),
 ('test permission', '/country/delete'),
@@ -110,49 +167,60 @@ CREATE TABLE IF NOT EXISTS `auth_rule` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `data` text COLLATE utf8_unicode_ci,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `continent`
+-- Table structure for table `local_message`
 --
 
-CREATE TABLE IF NOT EXISTS `continent` (
-`co_id` int(11) NOT NULL,
-  `co_name` varchar(20) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `local_message` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `language` varchar(16) NOT NULL DEFAULT '',
+  `translation` text CHARACTER SET utf8 COLLATE utf8_bin,
+  PRIMARY KEY (`id`,`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `continent`
+-- Dumping data for table `local_message`
 --
 
-INSERT INTO `continent` (`co_id`, `co_name`) VALUES
-(1, 'Asia'),
-(2, 'Australia'),
-(3, 'North America');
+INSERT INTO `local_message` (`id`, `language`, `translation`) VALUES
+(1, 'si', 'නිර්මාණය'),
+(1, 'ta', 'உருவாக்க'),
+(3, 'si', 'සම්පූර්ණ නම'),
+(3, 'ta', 'முழு பெயர்'),
+(4, 'si', '{attribute} හිස් විය නොහැක'),
+(5, 'si', '{modelClass} හදන්න'),
+(6, 'si', 'පුද්ගලයා');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `country`
+-- Table structure for table `local_source_message`
 --
 
-CREATE TABLE IF NOT EXISTS `country` (
-`cn_id` int(11) NOT NULL,
-  `cn_continent_id` int(11) NOT NULL,
-  `cn_name` varchar(20) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `local_source_message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(32) DEFAULT NULL,
+  `message` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
--- Dumping data for table `country`
+-- Dumping data for table `local_source_message`
 --
 
-INSERT INTO `country` (`cn_id`, `cn_continent_id`, `cn_name`) VALUES
-(1, 1, 'Sri Lanka'),
-(2, 2, 'Australia'),
-(3, 1, 'India');
+INSERT INTO `local_source_message` (`id`, `category`, `message`) VALUES
+(1, 'app', 'Create'),
+(2, 'app', 'Update'),
+(3, 'app', 'Full Name'),
+(4, 'yii', '{attribute} cannot be blank.'),
+(5, 'app', 'Create {modelClass}'),
+(6, 'yii', 'Person');
 
 -- --------------------------------------------------------
 
@@ -161,46 +229,15 @@ INSERT INTO `country` (`cn_id`, `cn_continent_id`, `cn_name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `menu` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   `parent` int(11) DEFAULT NULL,
   `route` varchar(256) DEFAULT NULL,
   `order` int(11) DEFAULT NULL,
-  `data` text
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `menu`
---
-
-INSERT INTO `menu` (`id`, `name`, `parent`, `route`, `order`, `data`) VALUES
-(1, 'test', NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `migration`
---
-
-CREATE TABLE IF NOT EXISTS `migration` (
-  `version` varchar(180) NOT NULL,
-  `apply_time` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `migration`
---
-
-INSERT INTO `migration` (`version`, `apply_time`) VALUES
-('m000000_000000_base', 1417824041),
-('m140209_132017_init', 1417824066),
-('m140403_174025_create_account_table', 1417824069),
-('m140504_113157_update_tables', 1417824076),
-('m140504_130429_create_token_table', 1417824078),
-('m140506_102106_rbac_init', 1417960154),
-('m140602_111327_create_menu_table', 1417957722),
-('m140830_171933_fix_ip_field', 1417824079),
-('m140830_172703_change_account_table_name', 1417824080);
+  `data` text,
+  PRIMARY KEY (`id`),
+  KEY `parent` (`parent`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -216,7 +253,8 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `gravatar_id` varchar(32) DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
-  `bio` text
+  `bio` text,
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -235,37 +273,46 @@ INSERT INTO `profile` (`user_id`, `name`, `public_email`, `gravatar_email`, `gra
 -- --------------------------------------------------------
 
 --
--- Table structure for table `social_account`
+-- Table structure for table `school_cls`
 --
 
-CREATE TABLE IF NOT EXISTS `social_account` (
-`id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `provider` varchar(255) NOT NULL,
-  `client_id` varchar(255) NOT NULL,
-  `data` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `school_cls` (
+  `cl_id` int(11) NOT NULL AUTO_INCREMENT,
+  `cl_name` varchar(20) NOT NULL,
+  `cl_grade` int(11) NOT NULL,
+  `cl_start_date` date NOT NULL,
+  PRIMARY KEY (`cl_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `school_cls`
+--
+
+INSERT INTO `school_cls` (`cl_id`, `cl_name`, `cl_grade`, `cl_start_date`) VALUES
+(2, 'Year 8-A', 7, '2015-01-29');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `token`
+-- Table structure for table `student`
 --
 
-CREATE TABLE IF NOT EXISTS `token` (
-  `user_id` int(11) NOT NULL,
-  `code` varchar(32) NOT NULL,
-  `created_at` int(11) NOT NULL,
-  `type` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `student` (
+  `st_id` int(11) NOT NULL AUTO_INCREMENT,
+  `st_class_id` int(11) NOT NULL COMMENT '<md>',
+  `st_name` varchar(20) NOT NULL,
+  `st_date_of_birth` date NOT NULL,
+  PRIMARY KEY (`st_id`),
+  KEY `st_class_id` (`st_class_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `token`
+-- Dumping data for table `student`
 --
 
-INSERT INTO `token` (`user_id`, `code`, `created_at`, `type`) VALUES
-(5, 'cjzOtmOO0-LbDG1e_qLgmKQw0IQO38Tq', 1417949874, 0),
-(6, '55zAWT_9n0U6xWnuCIM09aw0j-42iHyC', 1417949937, 0);
+INSERT INTO `student` (`st_id`, `st_class_id`, `st_name`, `st_date_of_birth`) VALUES
+(1, 2, 'Hans', '2015-01-30'),
+(2, 2, 'Harlan', '2015-01-23');
 
 -- --------------------------------------------------------
 
@@ -274,7 +321,7 @@ INSERT INTO `token` (`user_id`, `code`, `created_at`, `type`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(25) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password_hash` varchar(60) NOT NULL,
@@ -286,8 +333,11 @@ CREATE TABLE IF NOT EXISTS `user` (
   `registration_ip` bigint(20) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
-  `flags` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+  `flags` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_unique_username` (`username`),
+  UNIQUE KEY `user_unique_email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `user`
@@ -303,111 +353,6 @@ INSERT INTO `user` (`id`, `username`, `email`, `password_hash`, `auth_key`, `con
 (7, 'admin', 'harlan.gray+admin@gmail.com', '$2y$12$rBoxVbSlW3kN62JDPCNzsOGXHkZFHce0UiLmtXHadkFetdWowX74u', 'TStzDWfceWllGcqSPhzvMb3snmXVkQDq', 1417964596, NULL, NULL, NULL, 2130706433, 1417964598, 1417964598, 0);
 
 --
--- Indexes for dumped tables
---
-
---
--- Indexes for table `auth_assignment`
---
-ALTER TABLE `auth_assignment`
- ADD PRIMARY KEY (`item_name`,`user_id`);
-
---
--- Indexes for table `auth_item`
---
-ALTER TABLE `auth_item`
- ADD PRIMARY KEY (`name`), ADD KEY `rule_name` (`rule_name`), ADD KEY `idx-auth_item-type` (`type`);
-
---
--- Indexes for table `auth_item_child`
---
-ALTER TABLE `auth_item_child`
- ADD PRIMARY KEY (`parent`,`child`), ADD KEY `child` (`child`);
-
---
--- Indexes for table `auth_rule`
---
-ALTER TABLE `auth_rule`
- ADD PRIMARY KEY (`name`);
-
---
--- Indexes for table `continent`
---
-ALTER TABLE `continent`
- ADD PRIMARY KEY (`co_id`);
-
---
--- Indexes for table `country`
---
-ALTER TABLE `country`
- ADD PRIMARY KEY (`cn_id`), ADD KEY `cn_continent_id` (`cn_continent_id`);
-
---
--- Indexes for table `menu`
---
-ALTER TABLE `menu`
- ADD PRIMARY KEY (`id`), ADD KEY `parent` (`parent`);
-
---
--- Indexes for table `migration`
---
-ALTER TABLE `migration`
- ADD PRIMARY KEY (`version`);
-
---
--- Indexes for table `profile`
---
-ALTER TABLE `profile`
- ADD PRIMARY KEY (`user_id`);
-
---
--- Indexes for table `social_account`
---
-ALTER TABLE `social_account`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `account_unique` (`provider`,`client_id`), ADD KEY `fk_user_account` (`user_id`);
-
---
--- Indexes for table `token`
---
-ALTER TABLE `token`
- ADD UNIQUE KEY `token_unique` (`user_id`,`code`,`type`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `user_unique_username` (`username`), ADD UNIQUE KEY `user_unique_email` (`email`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `continent`
---
-ALTER TABLE `continent`
-MODIFY `co_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `country`
---
-ALTER TABLE `country`
-MODIFY `cn_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `menu`
---
-ALTER TABLE `menu`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `social_account`
---
-ALTER TABLE `social_account`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
---
 -- Constraints for dumped tables
 --
 
@@ -415,47 +360,45 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 -- Constraints for table `auth_assignment`
 --
 ALTER TABLE `auth_assignment`
-ADD CONSTRAINT `auth_assignment_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `auth_assignment_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `auth_item`
 --
 ALTER TABLE `auth_item`
-ADD CONSTRAINT `auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `auth_item_child`
 --
 ALTER TABLE `auth_item_child`
-ADD CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `country`
+-- Constraints for table `local_message`
 --
-ALTER TABLE `country`
-ADD CONSTRAINT `country_ibfk_1` FOREIGN KEY (`cn_continent_id`) REFERENCES `continent` (`co_id`);
+ALTER TABLE `local_message`
+  ADD CONSTRAINT `fk_message_source_message` FOREIGN KEY (`id`) REFERENCES `local_source_message` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `menu`
 --
 ALTER TABLE `menu`
-ADD CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `menu` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `menu` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `profile`
 --
 ALTER TABLE `profile`
-ADD CONSTRAINT `fk_user_profile` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_user_profile` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `social_account`
+-- Constraints for table `student`
 --
-ALTER TABLE `social_account`
-ADD CONSTRAINT `fk_user_account` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+ALTER TABLE `student`
+  ADD CONSTRAINT `student_ibfk_1` FOREIGN KEY (`st_class_id`) REFERENCES `school_cls` (`cl_id`);
 
---
--- Constraints for table `token`
---
-ALTER TABLE `token`
-ADD CONSTRAINT `fk_user_token` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
