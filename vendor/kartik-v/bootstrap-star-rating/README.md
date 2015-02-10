@@ -1,7 +1,7 @@
 bootstrap-star-rating
 =====================
 
-> NOTE: Version 3.4.0 has been released. Refer [change log](https://github.com/kartik-v/bootstrap-star-rating/blob/master/CHANGE.md) for details.
+> NOTE: Version 3.5.0 has been released. Refer [change log](https://github.com/kartik-v/bootstrap-star-rating/blob/master/CHANGE.md) for details.
 
 A simple yet powerful JQuery star rating plugin for Bootstrap which supports advanced features like fractional star fill and RTL input support. 
 Developed with a focus on utlizing pure CSS-3 styling to render the control. The plugin uses Bootstrap markup and styling by default, but it 
@@ -74,7 +74,7 @@ You can also manually install the plugin easily to your project. Just download t
 Step 1: Load the following assets in your header. 
 
 ```html
-<link href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 <link href="path/to/css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="path/to/js/star-rating.min.js" type="text/javascript"></script>
@@ -108,30 +108,30 @@ Alternatively, you can directly call the plugin options by setting data attribut
 ### Plugin Options
 The plugin supports these following options:
 
-##### stars
+#### stars
 _int_ number of stars to display. Defaults to `5`.
 
-##### glyphicon
+#### glyphicon
 _boolean_ whether to use the glyphicon star symbol. Defaults to `true`. If set to `false`,
 will use the unicode black star symbol.
 
-##### symbol
+#### symbol
 _string_ any custom star symbol or unicode character to display. This will override the 
 `glyphicon` settings above. 
 
-##### min
+#### min
 _float_ the minimum value for the rating input. Defaults to `1`.
 
-##### max
+#### max
 _float_ the maximum value for the rating input. Defaults to `5`.
 
-##### step
+#### step
 _float_ the step to increment the star rating. Defaults to `0.5`.
 
-##### disabled
+#### disabled
 _boolean_ whether the input is disabled. Defaults to `false`.
 
-##### readonly
+#### readonly
 _boolean_ whether the input is read only. Defaults to `false`.
 
 #### rtl
@@ -336,7 +336,7 @@ $('#input-id').rating('update', 3);
 ```
 
 #### refresh
-Use this method to dynamically refresh the rating options via javascript after the plugin has been initialized. The method accepts the plugin options entered as an array.
+Use this method to dynamically refresh the rating options via javascript after the plugin has been initialized. The method accepts the plugin options entered as object (associative array).
 ```js
 // Example: Call the method below in rating.change event to disable the rating and
 // hide the clear button.
@@ -362,9 +362,13 @@ $('#input-id').rating('destroy');
 ```
 
 #### create
-Re-creates the rating (after a destroy).
+Creates the rating after destroying any existing rating plugin instance.
 ```js
+// will re-create rating based on initial plugin options
 $('#input-id').rating('create');
+
+// any new plugin options if passed will be used instead of initial plugin options
+$('#input-id').rating('create', {disabled: true});
 ```
 
 ## License

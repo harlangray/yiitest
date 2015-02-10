@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e7a56034597053565711da772897ebae",
+    "hash": "8359d78c2646586aee7ab8a5536c3565",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -127,16 +127,16 @@
         },
         {
             "name": "bower-asset/jquery.inputmask",
-            "version": "3.1.58",
+            "version": "3.1.61",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
-                "reference": "8579f56b86f78accbaf03c28d44be35ca1e346a5"
+                "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/8579f56b86f78accbaf03c28d44be35ca1e346a5",
-                "reference": "8579f56b86f78accbaf03c28d44be35ca1e346a5",
+                "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
+                "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
                 "shasum": ""
             },
             "require": {
@@ -296,67 +296,6 @@
             "time": "2014-10-25 16:16:49"
         },
         {
-            "name": "dektrium/yii2-user",
-            "version": "v0.9.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dektrium/yii2-user.git",
-                "reference": "2d6d2d9100b808df402d8d9acd707b8a77c3ede6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dektrium/yii2-user/zipball/2d6d2d9100b808df402d8d9acd707b8a77c3ede6",
-                "reference": "2d6d2d9100b808df402d8d9acd707b8a77c3ede6",
-                "shasum": ""
-            },
-            "require": {
-                "yiisoft/yii2": "~2.0",
-                "yiisoft/yii2-authclient": "~2.0",
-                "yiisoft/yii2-swiftmailer": "~2.0"
-            },
-            "require-dev": {
-                "codeception/specify": "*",
-                "codeception/verify": "*",
-                "yiisoft/yii2-codeception": "~2.0"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "bootstrap": "dektrium\\user\\Bootstrap",
-                "branch-alias": {
-                    "dev-master": "0.9.x-dev",
-                    "dev-develop": "1.0.x-dev"
-                },
-                "asset-installer-paths": {
-                    "npm-asset-library": "vendor/npm",
-                    "bower-asset-library": "vendor/bower"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "dektrium\\user\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dmitry Erofeev",
-                    "email": "dmeroff@gmail.com",
-                    "homepage": "http://dmeroff.ru"
-                }
-            ],
-            "description": "Flexible user registration and authentication module for Yii2",
-            "keywords": [
-                "User management",
-                "dektrium",
-                "yii2",
-                "yii2-user"
-            ],
-            "time": "2015-01-14 17:53:42"
-        },
-        {
             "name": "ezyang/htmlpurifier",
             "version": "v4.6.0",
             "source": {
@@ -443,6 +382,67 @@
             "time": "2015-01-22 05:52:18"
         },
         {
+            "name": "harlangray/yii2-user",
+            "version": "v0.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harlangray/yii2-user.git",
+                "reference": "df25484cc999a58490293df4fdd4209817f6ed86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harlangray/yii2-user/zipball/df25484cc999a58490293df4fdd4209817f6ed86",
+                "reference": "df25484cc999a58490293df4fdd4209817f6ed86",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0",
+                "yiisoft/yii2-authclient": "~2.0",
+                "yiisoft/yii2-swiftmailer": "~2.0"
+            },
+            "require-dev": {
+                "codeception/specify": "*",
+                "codeception/verify": "*",
+                "yiisoft/yii2-codeception": "~2.0"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "bootstrap": "dektrium\\user\\Bootstrap",
+                "branch-alias": {
+                    "dev-master": "0.9.x-dev",
+                    "dev-develop": "1.0.x-dev"
+                },
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "dektrium\\user\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitry Erofeev",
+                    "email": "dmeroff@gmail.com",
+                    "homepage": "http://dmeroff.ru"
+                }
+            ],
+            "description": "Flexible user registration and authentication module for Yii2",
+            "keywords": [
+                "User management",
+                "dektrium",
+                "yii2",
+                "yii2-user"
+            ],
+            "time": "2015-02-09 11:35:49"
+        },
+        {
             "name": "kartik-v/bootstrap-fileinput",
             "version": "v4.1.6",
             "source": {
@@ -492,16 +492,16 @@
         },
         {
             "name": "kartik-v/bootstrap-star-rating",
-            "version": "v3.4.0",
+            "version": "v3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-star-rating.git",
-                "reference": "c32f43e707bf74de8820d470bae55153bf4b7549"
+                "reference": "dd56000e6d5c075d39fe40112b0158f42d624deb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-star-rating/zipball/c32f43e707bf74de8820d470bae55153bf4b7549",
-                "reference": "c32f43e707bf74de8820d470bae55153bf4b7549",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-star-rating/zipball/dd56000e6d5c075d39fe40112b0158f42d624deb",
+                "reference": "dd56000e6d5c075d39fe40112b0158f42d624deb",
                 "shasum": ""
             },
             "type": "library",
@@ -529,20 +529,20 @@
                 "jquery",
                 "star"
             ],
-            "time": "2014-12-15 19:26:36"
+            "time": "2015-02-01 01:11:43"
         },
         {
             "name": "kartik-v/dependent-dropdown",
-            "version": "v1.3.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/dependent-dropdown.git",
-                "reference": "7f21fd03d96304fd25d88372579a5e33c2978a7f"
+                "reference": "cbab8a3487cfc2a2fd6a2d63812915523f648a80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/dependent-dropdown/zipball/7f21fd03d96304fd25d88372579a5e33c2978a7f",
-                "reference": "7f21fd03d96304fd25d88372579a5e33c2978a7f",
+                "url": "https://api.github.com/repos/kartik-v/dependent-dropdown/zipball/cbab8a3487cfc2a2fd6a2d63812915523f648a80",
+                "reference": "cbab8a3487cfc2a2fd6a2d63812915523f648a80",
                 "shasum": ""
             },
             "type": "library",
@@ -571,7 +571,7 @@
                 "option",
                 "select"
             ],
-            "time": "2014-11-08 13:25:26"
+            "time": "2015-02-01 13:03:27"
         },
         {
             "name": "kartik-v/yii2-builder",
@@ -2166,12 +2166,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harlangray/yii2-gii-advanced.git",
-                "reference": "4f93dff6cfdb889cf57d4296179971642dd15aca"
+                "reference": "9bc0e1ba961d117a913123dd6c24850f40fd9ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harlangray/yii2-gii-advanced/zipball/4f93dff6cfdb889cf57d4296179971642dd15aca",
-                "reference": "4f93dff6cfdb889cf57d4296179971642dd15aca",
+                "url": "https://api.github.com/repos/harlangray/yii2-gii-advanced/zipball/9bc0e1ba961d117a913123dd6c24850f40fd9ab1",
+                "reference": "9bc0e1ba961d117a913123dd6c24850f40fd9ab1",
                 "shasum": ""
             },
             "require": {
@@ -2208,20 +2208,20 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2015-01-26 16:21:43"
+            "time": "2015-02-02 10:21:38"
         },
         {
             "name": "kartik-v/bootstrap-tabs-x",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-tabs-x.git",
-                "reference": "134a7e1a4be52cffc6d6ca1b22ed5d9c90f292ee"
+                "reference": "dee840828978e7f753aaf8e3677be5a1b4fc55f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-tabs-x/zipball/134a7e1a4be52cffc6d6ca1b22ed5d9c90f292ee",
-                "reference": "134a7e1a4be52cffc6d6ca1b22ed5d9c90f292ee",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-tabs-x/zipball/dee840828978e7f753aaf8e3677be5a1b4fc55f3",
+                "reference": "dee840828978e7f753aaf8e3677be5a1b4fc55f3",
                 "shasum": ""
             },
             "type": "library",
@@ -2252,7 +2252,7 @@
                 "tabs",
                 "tabs-x"
             ],
-            "time": "2014-11-08 07:42:50"
+            "time": "2015-02-01 00:21:13"
         },
         {
             "name": "kartik-v/yii2-tabs-x",

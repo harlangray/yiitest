@@ -174,16 +174,6 @@ return array (
       '@yii/swiftmailer' => $vendorDir . '/yiisoft/yii2-swiftmailer',
     ),
   ),
-  'dektrium/yii2-user' => 
-  array (
-    'name' => 'dektrium/yii2-user',
-    'version' => '0.9.2.0',
-    'alias' => 
-    array (
-      '@dektrium/user' => $vendorDir . '/dektrium/yii2-user',
-    ),
-    'bootstrap' => 'dektrium\\user\\Bootstrap',
-  ),
   'yiisoft/yii2-codeception' => 
   array (
     'name' => 'yiisoft/yii2-codeception',
@@ -309,5 +299,15 @@ return array (
     array (
       '@yii/gii' => $vendorDir . '/harlangray/yii2-gii-advanced',
     ),
+  ),
+  'harlangray/yii2-user' => 
+  array (
+    'name' => 'harlangray/yii2-user',
+    'version' => '0.9.3.0',
+    'alias' => 
+    array (
+      '@dektrium/user' => $vendorDir . '/harlangray/yii2-user',
+    ),
+    'bootstrap' => 'dektrium\\user\\Bootstrap',
   ),
 );

@@ -45,6 +45,6 @@ return array(
     'kartik\\alert\\' => array($vendorDir . '/kartik-v/yii2-widget-alert'),
     'kartik\\affix\\' => array($vendorDir . '/kartik-v/yii2-widget-affix'),
     'harlangray\\language\\' => array($vendorDir . '/harlangray/languageswitcher'),
-    'dektrium\\user\\' => array($vendorDir . '/dektrium/yii2-user'),
+    'dektrium\\user\\' => array($vendorDir . '/harlangray/yii2-user'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
 );
